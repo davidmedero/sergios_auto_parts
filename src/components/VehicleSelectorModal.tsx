@@ -94,7 +94,7 @@ const stateOptions: StateOption[] = [
 // ----- Component -----
 const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
-  const [year, setYear] = useState<number | null>(2026);
+  const [year, setYear] = useState<number | null>(null);
   const [make, setMake] = useState<MakeOption | null>(null);
   const [model, setModel] = useState<string | null>(null);
   const [engine, setEngine] = useState<string | null>(null);

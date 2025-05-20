@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
+import { VehiclesProvider } from '@/contexts/VehiclesContext';
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +30,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider theme={theme}>
-          {children}
+          <VehiclesProvider>
+            <Navbar/>
+            {children}
+          </VehiclesProvider>
         </ThemeProvider>
       </body>
     </html>

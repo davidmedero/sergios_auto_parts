@@ -17,6 +17,9 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import fetchJsonp from 'fetch-jsonp';
+import { useVehicles, Vehicle } from '@/contexts/VehiclesContext';
+import { useRouter } from 'next/navigation';
+import SelectedVehicleButton from './SelectedVehicleButton';
 
 // ----- Types -----
 interface VehicleSelectorModalProps {
@@ -116,6 +119,30 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
     (_, i) => MAX_YEAR - i
   );
 
+  const router = useRouter();
+
+  const { vehicles, currentVehicleId, addVehicle } = useVehicles();
+
+  // Currently shopping
+  const current = vehicles.find(v => v.id === currentVehicleId) ?? null;
+  const saved = vehicles.filter(v => v.id !== currentVehicleId);
+
+  // confirm selection and add to context
+  const handleConfirm = () => {
+    const label = tabIndex === 0
+      ? `${year} ${make?.label ?? ''} ${model ?? ''} ${engine ?? ''}`.trim()
+      : tabIndex === 1
+      ? `${selectedState?.code ?? ''} ${licensePlate}`.trim()
+      : `VIN: ${vin}`;
+
+    const newVehicle: Vehicle = {
+      id: crypto.randomUUID(),
+      label,
+    };
+    addVehicle(newVehicle);
+    onClose();
+  };
+
   useEffect(() => {
     fetchJsonp(
       `https://www.carqueryapi.com/api/0.3/?cmd=getMakes&year=${year}&callback=callback`,
@@ -161,6 +188,12 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
         setEngineOptions(Array.from(new Set(trims)));
       });
   }, [make, model, year]);
+
+  useEffect(() => {
+    if (engine && engine.length > 0) {
+      handleConfirm();
+    }
+  }, [engine]);
 
   
   return (
@@ -270,9 +303,78 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
             />
           </Box>
         )}
-        <Grid container sx={{ justifyContent: 'center', mx: 'auto', mt: 3 }}>
-          <Button variant='text'>Manage Vehicles</Button>
-        </Grid>
+        {
+          vehicles.length === 0 ? (
+            <Grid container sx={{ justifyContent: 'center', mx: 'auto', mt: 3 }}>
+              <Button 
+                variant='text'
+                onClick={() => {  
+                  onClose();
+                  router.push('/vehicles');
+                }}>
+                  Manage Vehicles
+              </Button>
+            </Grid>
+          ) : null
+        }
+
+        {/* Bottom Content */}
+        {
+          vehicles.length >= 1 ? (
+            <Grid container spacing={4} sx={{ mt: 4 }}>
+            {/* Left: Currently Shopping For */}
+            {
+              vehicles.length >= 1 ? (
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Typography variant="subtitle1" gutterBottom>Currently Shopping For:</Typography>
+                  {current ? (
+                    <SelectedVehicleButton
+                      showCheck={true}
+                      vehicleLabel={current.label}
+                      onClick={() => {
+                        onClose();
+                      }}
+                    />
+                  ) : (
+                    <Typography color="text.secondary">No current vehicle</Typography>
+                  )}
+                  <Box sx={{ mt: 2 }}>
+                    <Button variant="text" onClick={() => { onClose(); router.push('/vehicles'); }}>
+                      Manage Vehicles
+                    </Button>
+                    <Button variant="text" sx={{ ml: 2 }} onClick={() => { onClose(); /* clear filter */ }}>
+                      Shop Without Vehicle
+                    </Button>
+                  </Box>
+                </Grid>
+              ) : null
+            }
+
+            {/* Right: Saved Vehicles */}
+            {
+              vehicles.length > 1 ? (
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Typography variant="subtitle1" gutterBottom>Saved Vehicles:</Typography>
+                  <Grid container direction="column" spacing={2}>
+                    {saved.map(v => (
+                      <Grid key={v.id}>
+                        <SelectedVehicleButton
+                          showCheck={false}
+                          vehicleLabel={v.label}
+                          onClick={() => {
+                            onClose();
+                            // set as current in context
+                          }}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+              ) : null
+            }
+          </Grid>
+          ) : null
+        }
       </DialogContent>
     </Dialog>
   );

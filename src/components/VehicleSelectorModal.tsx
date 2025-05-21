@@ -19,7 +19,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import fetchJsonp from 'fetch-jsonp';
 import { useVehicles, Vehicle } from '@/contexts/VehiclesContext';
 import { useRouter } from 'next/navigation';
-import SelectedVehicleButton from './SelectedVehicleButton';
+import CurrentlyShoppingForCard from './CurrentlyShoppingForCard';
+import SavedVehiclesCard from './SavedVehiclesCard';
 
 // ----- Types -----
 interface VehicleSelectorModalProps {
@@ -121,7 +122,7 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
 
   const router = useRouter();
 
-  const { vehicles, currentVehicleId, addVehicle } = useVehicles();
+  const { vehicles, currentVehicleId, addVehicle, setCurrentVehicle, setCurrentVehicleId } = useVehicles();
 
   // Currently shopping
   const current = vehicles.find(v => v.id === currentVehicleId) ?? null;
@@ -142,6 +143,23 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
     addVehicle(newVehicle);
     onClose();
   };
+
+  // Reset all fields whenever modal is opened
+  useEffect(() => {
+    if (open) {
+      setTabIndex(0);
+      setYear(null);
+      setMake(null);
+      setModel(null);
+      setEngine(null);
+      setLicensePlate('');
+      setVin('');
+      setSelectedState(null);
+      setMakeOptions([]);
+      setModelOptions([]);
+      setEngineOptions([]);
+    }
+  }, [open]);
 
   useEffect(() => {
     fetchJsonp(
@@ -228,7 +246,12 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                 <Autocomplete<number, false, false, false>
                   options={yearOptions}
                   value={year}
-                  onChange={(_, v) => setYear(v)}
+                  onChange={(_, v) => {
+                    setYear(v);
+                    setMake(null); setMakeOptions([]);
+                    setModel(null); setModelOptions([]);
+                    setEngine(null); setEngineOptions([]);
+                  }}
                   getOptionLabel={(opt) => opt.toString()}
                   renderInput={(p) => <TextField {...p} label="Year" />}
                 />
@@ -239,7 +262,11 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                   options={makeOptions}
                   getOptionLabel={(opt) => opt.label}
                   value={make}
-                  onChange={(_, v) => setMake(v)}
+                  onChange={(_, v) => {
+                    setMake(v);
+                    setModel(null); setModelOptions([]);
+                    setEngine(null); setEngineOptions([]);
+                  }}
                   renderInput={(p) => <TextField {...p} label="Make" />}
                 />
               </Grid>
@@ -249,7 +276,10 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                   options={modelOptions}
                   getOptionLabel={(opt) => opt}
                   value={model}
-                  onChange={(_, v) => setModel(v)}
+                  onChange={(_, v) => {
+                    setModel(v);
+                    setEngine(null); setEngineOptions([]);
+                  }}
                   renderInput={(p) => <TextField {...p} label="Model" />}
                 />
               </Grid>
@@ -321,19 +351,15 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
         {/* Bottom Content */}
         {
           vehicles.length >= 1 ? (
-            <Grid container spacing={4} sx={{ mt: 4 }}>
+            <Grid container spacing={4} sx={{ mt: 4, pb: '4px' }}>
             {/* Left: Currently Shopping For */}
             {
-              vehicles.length >= 1 ? (
+              vehicles.length >= 1 && currentVehicleId !== null ? (
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="subtitle1" gutterBottom>Currently Shopping For:</Typography>
                   {current ? (
-                    <SelectedVehicleButton
-                      showCheck={true}
+                    <CurrentlyShoppingForCard
                       vehicleLabel={current.label}
-                      onClick={() => {
-                        onClose();
-                      }}
                     />
                   ) : (
                     <Typography color="text.secondary">No current vehicle</Typography>
@@ -342,7 +368,13 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                     <Button variant="text" onClick={() => { onClose(); router.push('/vehicles'); }}>
                       Manage Vehicles
                     </Button>
-                    <Button variant="text" sx={{ ml: 2 }} onClick={() => { onClose(); /* clear filter */ }}>
+                    <Button 
+                      variant="text" 
+                      sx={{ ml: 2 }} 
+                      onClick={() => { 
+                        setCurrentVehicleId(null);
+                        onClose(); 
+                      }}>
                       Shop Without Vehicle
                     </Button>
                   </Box>
@@ -358,12 +390,11 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                   <Grid container direction="column" spacing={2}>
                     {saved.map(v => (
                       <Grid key={v.id}>
-                        <SelectedVehicleButton
-                          showCheck={false}
+                        <SavedVehiclesCard
                           vehicleLabel={v.label}
                           onClick={() => {
+                            setCurrentVehicle(v.id)
                             onClose();
-                            // set as current in context
                           }}
                         />
                       </Grid>

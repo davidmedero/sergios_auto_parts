@@ -13,6 +13,7 @@ interface VehiclesContextValue {
   addVehicle: (v: Vehicle) => void;
   removeVehicle: (id: string) => void;
   setCurrentVehicle: (id: string) => void;
+  setCurrentVehicleId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const VehiclesContext = createContext<VehiclesContextValue | undefined>(undefined);
@@ -39,7 +40,7 @@ export const VehiclesProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <VehiclesContext.Provider
-      value={{ vehicles, currentVehicleId, addVehicle, removeVehicle, setCurrentVehicle }}
+      value={{ vehicles, currentVehicleId, addVehicle, removeVehicle, setCurrentVehicle, setCurrentVehicleId }}
     >
       {children}
     </VehiclesContext.Provider>

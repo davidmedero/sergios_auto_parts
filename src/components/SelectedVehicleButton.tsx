@@ -7,63 +7,61 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 interface SelectedVehicleButtonProps {
-  /** e.g. "2024 Acura Integra A-Spec 1.5L Turbo DOHC VTEC 4cy" */
   vehicleLabel: string;
   onClick: () => void;
-  showCheck: boolean;
+}
+
+function clampText(text: string, maxChars = 50) {
+  if (text.length <= maxChars) return text;
+  return text.slice(0, maxChars - 1).trimEnd() + '…';
 }
 
 const SelectedVehicleButton: FC<SelectedVehicleButtonProps> = ({
   vehicleLabel,
-  onClick,
-  showCheck
+  onClick
 }) => (
   <ButtonBase
     onClick={onClick}
     sx={{
-      width: "100%",
-      border: "2px solid",
-      borderColor: "primary.main",
+      width: "240px",
       borderRadius: 1,
-      p: 1.5,
+      py: 0.5,
+      px: 2,
       display: "flex",
       alignItems: "center",
       textAlign: "left",
-      bgcolor: "background.paper",
-      "&:hover": {
-        bgcolor: "#eaeaea",
-      },
+      bgcolor: "transparent",
+      "&:hover": { bgcolor: "#E0E0E0" },
     }}
   >
-    {/* icon + check badge */}
-    <Box sx={{ position: "relative", mr: 2 }}>
+    <Box sx={{ position: "relative", mr: 2, flexShrink: 0 }}>
       <DirectionsCarIcon fontSize="large" color="action" />
-      {
-        showCheck ? (
-          <CheckCircleIcon
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              bgcolor: "background.paper",
-              borderRadius: "50%",
-              color: "success.main",
-              fontSize: "1rem",
-            }}
-          />
-        ) : null
-      }
+      <CheckCircleIcon
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          bgcolor: "background.paper",
+          borderRadius: "50%",
+          color: "success.main",
+          fontSize: "1rem",
+        }}
+      />
     </Box>
 
-    {/* vehicle text */}
     <Typography
-      variant="subtitle1"
-      sx={{ flexGrow: 1, fontWeight: 600, lineHeight: 1.2, color: "#2d2a26" }}
+      sx={{
+        lineHeight: 1.2,
+        color: "#2d2a26",
+        fontSize: "12px",
+        fontWeight: 400,
+        overflow: "hidden",
+      }}
+      variant="body2"
     >
-      {vehicleLabel}
+      {clampText(vehicleLabel, 39)}
     </Typography>
 
-    {/* chevron */}
     <ChevronRightIcon color="action" />
   </ButtonBase>
 );

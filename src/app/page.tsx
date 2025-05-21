@@ -4,16 +4,12 @@ import React, { useState } from 'react';
 import {
   Typography,
   Container,
-  Button,
   Grid,
   Card,
   CardMedia,
   CardContent,
-  Box,
 } from '@mui/material';
 import VehicleSelectorModal from '../components/VehicleSelectorModal';
-import SelectedVehicleButton from "@/components/SelectedVehicleButton";
-import { useVehicles } from '@/contexts/VehiclesContext';
 
 // Sample category data
 const categories = [
@@ -25,8 +21,6 @@ const categories = [
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
-  const { vehicles, currentVehicleId } = useVehicles();
-  const currentVehicle = vehicles.find(v => v.id === currentVehicleId) || null;
 
   return (
     <>
@@ -38,19 +32,6 @@ export default function HomePage() {
         <Typography variant="h6" color="text.secondary">
           Enter your vehicle details to see compatible parts instantly.
         </Typography>
-        <Box sx={{ mt: 3 }}>
-          {currentVehicle ? (
-            <SelectedVehicleButton
-              showCheck={true}
-              vehicleLabel={currentVehicle.label}
-              onClick={() => setModalOpen(true)}
-            />
-          ) : (
-            <Button variant="contained" onClick={() => setModalOpen(true)}>
-              Select Your Vehicle
-            </Button>
-          )}
-        </Box>
       </Container>
 
       {/* Category Cards */}

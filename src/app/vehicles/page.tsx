@@ -53,6 +53,7 @@ export default function ManageVehiclesPage() {
               sx={{
                 display: "flex",
                 alignItems: "center",
+                flexWrap: "wrap",
                 gap: 2,
                 p: '16px 24px 16px 16px',
                 borderColor: veh.id === currentVehicleId ? 'primary.main' : '',
@@ -78,7 +79,9 @@ export default function ManageVehiclesPage() {
                     />
                   </Box>
                 ) : (
-                  <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
+                  <Box sx={{ position: "relative", flexShrink: 0 }}>
+                    <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
+                  </Box>
                 )
               }
               {/* Vehicle Label */}
@@ -86,26 +89,29 @@ export default function ManageVehiclesPage() {
                 {veh.label}
               </Typography>
 
-              {/* Set as Current Button (if not current) */}
-              {veh.id !== currentVehicleId && (
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => setCurrentVehicle(veh.id)}
-                  sx={{ textTransform: "none" }}
-                >
-                  Set as Current Vehicle
-                </Button>
-              )}
+              <Grid container spacing={2}>
+                {/* Set as Current Button (if not current) */}
+                {veh.id !== currentVehicleId && (
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => setCurrentVehicle(veh.id)}
+                    sx={{ textTransform: "none" }}
+                  >
+                    Set as Current Vehicle
+                  </Button>
+                )}
 
-              {/* Delete Icon */}
-              <IconButton
-                edge="end"
-                onClick={() => removeVehicle(veh.id)}
-                sx={{ color: "#2d2a26" }}
-              >
-                <DeleteIcon />
-              </IconButton>
+                {/* Delete Icon */}
+                <IconButton
+                  edge="end"
+                  onClick={() => removeVehicle(veh.id)}
+                  sx={{ color: "#2d2a26" }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Grid>
+              
             </Paper>
           </Grid>
         ))}

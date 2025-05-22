@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import { VehiclesProvider } from '@/contexts/VehiclesContext';
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,8 @@ export default function RootLayout({
         <ThemeProvider theme={theme}>
           <VehiclesProvider>
             <Navbar/>
-            {children}
+            <main style={{ flex: 1 }}>{children}</main>
+            <Footer />
           </VehiclesProvider>
         </ThemeProvider>
       </body>

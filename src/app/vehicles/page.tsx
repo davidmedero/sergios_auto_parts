@@ -13,8 +13,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useVehicles, Vehicle } from '@/contexts/VehiclesContext';
 import VehicleSelectorModal from '@/components/VehicleSelectorModal';
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { FaCar } from 'react-icons/fa';
 
 export default function ManageVehiclesPage() {
   const { vehicles, currentVehicleId, removeVehicle, setCurrentVehicle } = useVehicles();
@@ -38,7 +38,7 @@ export default function ManageVehiclesPage() {
           startIcon={<AddIcon />}
           onClick={() => setModalOpen(true)}
         >
-          Add a Vehicle
+          <Typography sx={{ color: "#2d2a26" }}>Add a Vehicle</Typography>
         </Button>
       </Box>
 
@@ -64,12 +64,12 @@ export default function ManageVehiclesPage() {
               {
                 veh.id === currentVehicleId ? (
                   <Box sx={{ position: "relative", flexShrink: 0 }}>
-                    <DirectionsCarIcon fontSize="large" color="action" />
+                    <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
                     <CheckCircleIcon
                       sx={{
                         position: "absolute",
-                        bottom: 0,
-                        right: 0,
+                        top: -5,
+                        right: -5,
                         bgcolor: "background.paper",
                         borderRadius: "50%",
                         color: "success.main",
@@ -78,7 +78,7 @@ export default function ManageVehiclesPage() {
                     />
                   </Box>
                 ) : (
-                  <DirectionsCarIcon fontSize="large" color="action" />
+                  <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
                 )
               }
               {/* Vehicle Label */}

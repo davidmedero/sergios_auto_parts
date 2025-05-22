@@ -350,7 +350,7 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
 
         {/* Bottom Content */}
         {
-          vehicles.length >= 1 ? (
+          vehicles.length >= 1 && currentVehicleId && currentVehicleId.length > 0 ? (
             <Grid container spacing={4} sx={{ mt: 4, pb: '4px' }}>
             {/* Left: Currently Shopping For */}
             {
@@ -404,6 +404,43 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
               ) : null
             }
           </Grid>
+          ) : null
+        }
+
+        {
+          vehicles.length >= 1 && currentVehicleId === null ? (
+            <Grid container spacing={4}>
+              <Grid size={{ xs: 12, md: 6 }} sx={{ mt: 4 }}>
+                <Typography variant="subtitle1" gutterBottom>Saved Vehicles:</Typography>
+                <Grid container direction="column" spacing={2}>
+                  {saved.map(v => (
+                    <Grid key={v.id}>
+                      <SavedVehiclesCard
+                        vehicleLabel={v.label}
+                        onClick={() => {
+                          setCurrentVehicle(v.id)
+                          onClose();
+                        }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+                <Box sx={{ mt: 2 }}>
+                  <Button variant="text" onClick={() => { onClose(); router.push('/vehicles'); }}>
+                    Manage Vehicles
+                  </Button>
+                  <Button 
+                    variant="text" 
+                    sx={{ ml: 2 }} 
+                    onClick={() => { 
+                      setCurrentVehicleId(null);
+                      onClose(); 
+                    }}>
+                    Shop Without Vehicle
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
           ) : null
         }
       </DialogContent>

@@ -2,7 +2,7 @@
 
 import React, { FC } from "react";
 import { Box, Typography, Paper, ButtonBase } from "@mui/material";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import { FaCar } from "react-icons/fa";
 
 interface CurrentlyShoppingForCardProps {
   vehicleLabel: string;
@@ -13,17 +13,20 @@ const CurrentlyShoppingForCard: FC<CurrentlyShoppingForCardProps> = ({
   vehicleLabel,
   onClick
 }) => (
-  <Paper elevation={2} sx={{
-    // animate the shadow so it doesn’t snap
-    transition: (theme) =>
-      theme.transitions.create('box-shadow', {
-        duration: theme.transitions.duration.short,
-      }),
-    // on hover, use the theme’s 8th shadow (same as elevation=8)
-    '&:hover': {
-      boxShadow: (theme) => theme.shadows[4],
-    },
-  }}>
+  <Paper 
+    elevation={2}
+    sx={{
+      // animate the shadow so it doesn’t snap
+      transition: (theme) =>
+        theme.transitions.create('box-shadow', {
+          duration: theme.transitions.duration.short,
+        }),
+      // on hover, use the theme’s 8th shadow (same as elevation=8)
+      '&:hover': {
+        boxShadow: (theme) => theme.shadows[4],
+      },
+    }}
+  >
     <ButtonBase
       onClick={onClick}
       sx={{
@@ -36,12 +39,12 @@ const CurrentlyShoppingForCard: FC<CurrentlyShoppingForCardProps> = ({
       }}
     >
       <Box sx={{ position: "relative", mr: 2, flexShrink: 0 }}>
-        <DirectionsCarIcon fontSize="large" color="action" />
+        <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
       </Box>
 
       <Typography
         sx={{
-          lineHeight: 1.2,
+          lineHeight: 1.333,
           color: "#2d2a26",
           fontSize: "14px",
           fontWeight: 400,

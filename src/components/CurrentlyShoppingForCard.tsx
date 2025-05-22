@@ -2,8 +2,8 @@
 
 import React, { FC } from "react";
 import { Box, Typography, Paper } from "@mui/material";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { FaCar } from "react-icons/fa";
 
 interface CurrentlyShoppingForCardProps {
   vehicleLabel: string;
@@ -24,13 +24,13 @@ const CurrentlyShoppingForCard: FC<CurrentlyShoppingForCardProps> = ({
         cursor: "auto"
       }}
     >
-      <Box sx={{ position: "relative", mr: 2, flexShrink: 0 }}>
-        <DirectionsCarIcon fontSize="large" color="action" />
+      <Box sx={{ position: "relative", mr: 2, flexShrink: 0, top: 5 }}>
+        <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
         <CheckCircleIcon
           sx={{
             position: "absolute",
-            bottom: 0,
-            right: 0,
+            top: -5,
+            right: -5,
             bgcolor: "background.paper",
             borderRadius: "50%",
             color: "success.main",
@@ -41,7 +41,7 @@ const CurrentlyShoppingForCard: FC<CurrentlyShoppingForCardProps> = ({
 
       <Typography
         sx={{
-          lineHeight: 1.2,
+          lineHeight: 1.333,
           color: "#2d2a26",
           fontSize: "14px",
           fontWeight: 400,

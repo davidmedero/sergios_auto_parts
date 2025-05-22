@@ -24,8 +24,44 @@ const CurrentlyShoppingForCard: FC<CurrentlyShoppingForCardProps> = ({
         cursor: "auto"
       }}
     >
-      <Box sx={{ position: "relative", mr: 2, flexShrink: 0, top: 5 }}>
+      <Box 
+        sx={{ 
+          position: "relative",
+          mr: 2,
+          flexShrink: 0,
+          top: 5,
+          "@media (max-width:480px)": {
+            display: "none"
+          }
+        }}
+      >
         <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
+        <CheckCircleIcon
+          sx={{
+            position: "absolute",
+            top: -5,
+            right: -5,
+            bgcolor: "background.paper",
+            borderRadius: "50%",
+            color: "success.main",
+            fontSize: "1rem",
+          }}
+        />
+      </Box>
+
+      <Box 
+        sx={{ 
+          display: "none",
+          position: "relative",
+          mr: 2,
+          flexShrink: 0,
+          top: 5,
+          "@media (max-width:480px)": {
+            display: "flex"
+          }
+        }}
+      >
+        <FaCar size="1.5rem" color="#2d2a26" style={{ width: "30px" }} />
         <CheckCircleIcon
           sx={{
             position: "absolute",

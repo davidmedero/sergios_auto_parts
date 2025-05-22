@@ -38,8 +38,31 @@ const CurrentlyShoppingForCard: FC<CurrentlyShoppingForCardProps> = ({
         bgcolor: "transparent",
       }}
     >
-      <Box sx={{ position: "relative", mr: 2, flexShrink: 0 }}>
+      <Box 
+        sx={{ 
+          position: "relative",
+          mr: 2,
+          flexShrink: 0,
+          "@media (max-width:480px)": {
+            display: "none"
+          }
+        }}
+      >
         <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
+      </Box>
+
+      <Box 
+        sx={{ 
+          display: "none",
+          position: "relative",
+          mr: 2,
+          flexShrink: 0,
+          "@media (max-width:480px)": {
+            display: "flex"
+          }
+        }}
+      >
+        <FaCar size="1.5rem" color="#2d2a26" style={{ width: "30px" }} />
       </Box>
 
       <Typography

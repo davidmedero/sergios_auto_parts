@@ -161,7 +161,7 @@ const Navbar: FC = () => {
       </AppBar>
 
       {/* Bottom Row */}
-      <AppBar position="sticky" elevation={0} sx={{ bgcolor: "#F2F2F2", top: 0 }}>
+      <AppBar position="sticky" elevation={2} sx={{ bgcolor: "#F2F2F2", top: 0 }}>
         <Toolbar 
           sx={{ 
             minHeight: 64, 
@@ -191,12 +191,36 @@ const Navbar: FC = () => {
                   <Button
                     variant="outlined"
                     onClick={() => setModalOpen(true)}
-                    sx={{ textTransform: "none", bgcolor: "#FFF", border: "none" }}
+                    sx={{ 
+                      textTransform: "none",
+                      bgcolor: "#FFF",
+                      border: "none",
+                      "@media (max-width:480px)": {
+                        bgcolor: 'transparent',
+                      }
+                    }}
                   >
                     <Grid container alignItems="center" spacing={1}>
                       <FaCar size="1.5rem" color="#2d2a26" style={{ width: "30px" }} />
-                      <Typography variant="body2" sx={{ color: "#2d2a26" }}>Add Vehicle</Typography>
-                      <ChevronRightIcon color="action" />
+                      <Typography
+                        variant="body2"
+                        sx={{ 
+                          color: "#2d2a26",
+                          "@media (max-width:480px)": {
+                            display: 'none',
+                          } 
+                        }}
+                      >
+                        Add Vehicle
+                      </Typography>
+                      <ChevronRightIcon 
+                        color="action"
+                        sx={{ 
+                          "@media (max-width:480px)": {
+                            display: 'none',
+                          } 
+                        }}
+                      />
                     </Grid>
                   </Button>
                 )}

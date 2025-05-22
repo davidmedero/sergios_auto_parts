@@ -215,9 +215,32 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
 
   
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      fullWidth 
+      maxWidth="md" 
+      sx={{ 
+        "@media (max-width:480px)": {
+          "& .MuiDialog-paper": {
+            width: "calc(100% - 34px)",
+            m: "0px !important"
+          }
+        }
+       }}>
       <DialogTitle sx={{ position: 'relative' }}>
-        <Typography sx={{ fontSize: '24px', textAlign: 'center' }}>Choose a New Vehicle</Typography>
+        <Typography 
+          sx={{ 
+            fontSize: '24px',
+            textAlign: 'center',
+            "@media (max-width:480px)": {
+              textAlign: 'left',
+              fontSize: '20px',
+            }
+          }}
+        >
+          Choose a New Vehicle
+        </Typography>
         <IconButton
           edge="end"
           onClick={onClose}
@@ -232,17 +255,44 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
         value={tabIndex}
         onChange={(_, v) => setTabIndex(v)}
         aria-label="vehicle selector tabs"
+        sx={{
+          "@media (max-width:480px)": {
+            display: "none"
+          }
+        }}
       >
         <Tab label="Make/Model" />
         <Tab label="License Plate" />
         <Tab label="VIN" />
       </Tabs>
 
-      <DialogContent>
+      <Tabs
+        value={tabIndex}
+        onChange={(_, v) => setTabIndex(v)}
+        aria-label="vehicle selector tabs"
+        sx={{
+          display: "none",
+          "@media (max-width:480px)": {
+            display: "flex"
+          }
+        }}
+      >
+        <Tab label="Make" />
+        <Tab label="License" />
+        <Tab label="VIN" />
+      </Tabs>
+
+      <DialogContent
+        sx={{ 
+          "@media (max-width:480px)": {
+            p: "20px 20px"
+          }
+        }}
+      >
         {tabIndex === 0 && (
           <Box sx={{ mt: 2 }}>
             <Grid container spacing={2} alignItems="center">
-              <Grid size={{ xs: 12, sm: 3 }}>
+              <Grid size={{ xs: 12, md: 3 }}>
                 <Autocomplete<number, false, false, false>
                   options={yearOptions}
                   value={year}
@@ -257,7 +307,7 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                 />
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 3 }}>
+              <Grid size={{ xs: 12, md: 3 }}>
                 <Autocomplete<MakeOption, false, false, false>
                   options={makeOptions}
                   getOptionLabel={(opt) => opt.label}
@@ -271,7 +321,7 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                 />
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 3 }}>
+              <Grid size={{ xs: 12, md: 3 }}>
                 <Autocomplete<string, false, false, false>
                   options={modelOptions}
                   getOptionLabel={(opt) => opt}
@@ -284,7 +334,7 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                 />
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 3 }}>
+              <Grid size={{ xs: 12, md: 3 }}>
                 <Autocomplete<string, false, false, false>
                   options={engineOptions}
                   value={engine}
@@ -364,13 +414,12 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                   ) : (
                     <Typography color="text.secondary">No current vehicle</Typography>
                   )}
-                  <Box sx={{ mt: 2 }}>
+                  <Box sx={{ display: "flex", mt: 2, gap: 1, flexWrap: "wrap" }}>
                     <Button variant="text" onClick={() => { onClose(); router.push('/vehicles'); }}>
                       Manage Vehicles
                     </Button>
                     <Button 
-                      variant="text" 
-                      sx={{ ml: 2 }} 
+                      variant="text"  
                       onClick={() => { 
                         setCurrentVehicleId(null);
                         onClose(); 

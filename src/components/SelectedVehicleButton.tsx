@@ -30,10 +30,24 @@ const SelectedVehicleButton: FC<SelectedVehicleButtonProps> = ({
       display: "flex",
       alignItems: "center",
       textAlign: "left",
-      textTransform: "none"
+      textTransform: "none",
+      "@media (max-width:480px)": {
+        width: '100%',
+        px: 1,
+      }  
     }}
   >
-    <Box sx={{ position: "relative", mr: 2, flexShrink: 0, top: 4 }}>
+    <Box 
+      sx={{ 
+        position: "relative",
+        mr: 2,
+        flexShrink: 0,
+        top: 4 ,
+        "@media (max-width:480px)": {
+          mr: 0,
+        }  
+      }}
+    >
       <FaCar size="1.5rem" color="#2d2a26" style={{ width: "30px" }} />
       <CheckCircleIcon
         sx={{
@@ -48,20 +62,30 @@ const SelectedVehicleButton: FC<SelectedVehicleButtonProps> = ({
       />
     </Box>
 
-    <Typography
-      sx={{
-        lineHeight: 1.333,
-        color: "#2d2a26",
-        fontSize: "12px",
-        fontWeight: 400,
-        overflow: "hidden",
+    <Box 
+      sx={{ 
+        display: "inline-flex",
+        alignItems: "center" ,
+        "@media (max-width:480px)": {
+          display: 'none',
+        }   
       }}
-      variant="body2"
     >
-      {clampText(vehicleLabel, 36)}
-    </Typography>
+      <Typography
+        sx={{
+          lineHeight: 1.333,
+          color: "#2d2a26",
+          fontSize: "12px",
+          fontWeight: 400,
+          overflow: "hidden",
+        }}
+        variant="body2"
+      >
+        {clampText(vehicleLabel, 36)}
+      </Typography>
 
-    <ChevronRightIcon color="action" />
+      <ChevronRightIcon color="action" />
+    </Box>
   </Button>
 );
 

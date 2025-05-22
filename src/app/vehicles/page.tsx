@@ -29,7 +29,14 @@ export default function ManageVehiclesPage() {
   }, [vehicles, currentVehicleId]);
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box 
+      sx={{ 
+        p: 3,
+        "@media (max-width:480px)": {
+          p: 2
+        }
+      }}
+    >
       {/* Header and Add Button */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
         <Typography variant="h4">My Vehicles</Typography>
@@ -43,7 +50,19 @@ export default function ManageVehiclesPage() {
       </Box>
 
       {/* Vehicle List */}
-      <Grid container direction="column" spacing={2} sx={{ bgcolor: "#F2F2F2", p: 3, borderRadius: 1 }}>
+      <Grid 
+        container 
+        direction="column" 
+        spacing={2} 
+        sx={{ 
+          bgcolor: "#F2F2F2",
+          p: 3,
+          borderRadius: 1,
+          "@media (max-width:480px)": {
+            p: 2
+          }
+        }}
+      >
         {sorted.map((veh: Vehicle) => (
           <Grid 
             key={veh.id}
@@ -53,64 +72,146 @@ export default function ManageVehiclesPage() {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                flexWrap: "wrap",
+                justifyContent: "space-between",
                 gap: 2,
-                p: '16px 24px 16px 16px',
+                p: '16px 24px 16px 24px',
                 borderColor: veh.id === currentVehicleId ? 'primary.main' : '',
                 borderWidth: veh.id === currentVehicleId ? 2 : 0,
                 borderStyle: "solid",
                 boxShadow: veh.id === currentVehicleId ? "none" : (theme) => theme.shadows[3]
               }}
             >
-              {
-                veh.id === currentVehicleId ? (
-                  <Box sx={{ position: "relative", flexShrink: 0 }}>
-                    <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
-                    <CheckCircleIcon
-                      sx={{
-                        position: "absolute",
-                        top: -5,
-                        right: -5,
-                        bgcolor: "background.paper",
-                        borderRadius: "50%",
-                        color: "success.main",
-                        fontSize: "1rem",
-                      }}
-                    />
-                  </Box>
-                ) : (
-                  <Box sx={{ position: "relative", flexShrink: 0 }}>
-                    <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
-                  </Box>
-                )
-              }
-              {/* Vehicle Label */}
-              <Typography sx={{ flexGrow: 1, color: "#2d2a26", }}>
-                {veh.label}
-              </Typography>
+              <Grid>
+                <Grid 
+                  container 
+                  spacing={3} 
+                  alignItems="center" 
+                  sx={{ 
+                    flexWrap: "nowrap",
+                    "@media (max-width:480px)": {
+                      flexWrap: "wrap",
+                      gap: 1
+                    } 
+                  }}
+                >
+                  {
+                    veh.id === currentVehicleId ? (
+                      <Box 
+                        sx={{ 
+                          position: "relative",
+                          flexShrink: 0,
+                          "@media (max-width:480px)": {
+                            display: "none",
+                          } 
+                        }}
+                      >
+                        <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
+                        <CheckCircleIcon
+                          sx={{
+                            position: "absolute",
+                            top: -5,
+                            right: -5,
+                            bgcolor: "background.paper",
+                            borderRadius: "50%",
+                            color: "success.main",
+                            fontSize: "1rem",
+                          }}
+                        />
+                      </Box>
+                    ) : (
+                      <Box 
+                        sx={{ 
+                          position: "relative",
+                          flexShrink: 0,
+                          "@media (max-width:480px)": {
+                            display: "none",
+                          } 
+                        }}
+                      >
+                        <FaCar size="2rem" color="#2d2a26" style={{ width: "30px" }} />
+                      </Box>
+                    )
+                  }
 
-              <Grid container spacing={2}>
+                  {
+                    veh.id === currentVehicleId ? (
+                      <Box 
+                        sx={{ 
+                          display: "none",
+                          position: "relative",
+                          flexShrink: 0,
+                          "@media (max-width:480px)": {
+                            display: "flex",
+                          } 
+                        }}
+                      >
+                        <FaCar size="1.5rem" color="#2d2a26" style={{ width: "30px" }} />
+                        <CheckCircleIcon
+                          sx={{
+                            position: "absolute",
+                            top: -5,
+                            right: -5,
+                            bgcolor: "background.paper",
+                            borderRadius: "50%",
+                            color: "success.main",
+                            fontSize: "1rem",
+                          }}
+                        />
+                      </Box>
+                    ) : (
+                      <Box 
+                        sx={{ 
+                          display: "none",
+                          position: "relative",
+                          flexShrink: 0,
+                          "@media (max-width:480px)": {
+                            display: "flex",
+                          } 
+                        }}
+                      >
+                        <FaCar size="1.5rem" color="#2d2a26" style={{ width: "30px" }} />
+                      </Box>
+                    )
+                  }
+
+                  {/* Vehicle Label */}
+                  <Typography 
+                    sx={{ 
+                      flexGrow: 1,
+                      color: "#2d2a26",
+                      "@media (max-width:480px)": {
+                        fontSize: '14px',
+                      } 
+                    }}
+                  >
+                    {veh.label}
+                  </Typography>
+                </Grid>
                 {/* Set as Current Button (if not current) */}
                 {veh.id !== currentVehicleId && (
                   <Button
                     size="small"
                     variant="outlined"
                     onClick={() => setCurrentVehicle(veh.id)}
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: "none", mt: 2 }}
                   >
                     Set as Current Vehicle
                   </Button>
                 )}
+              </Grid>
 
+              <Box>
                 {/* Delete Icon */}
                 <IconButton
                   edge="end"
                   onClick={() => removeVehicle(veh.id)}
-                  sx={{ color: "#2d2a26" }}
+                  sx={{ 
+                    color: "#2d2a26"
+                  }}
                 >
                   <DeleteIcon />
                 </IconButton>
-              </Grid>
+              </Box>
               
             </Paper>
           </Grid>

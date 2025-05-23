@@ -78,6 +78,9 @@ const Navbar: FC = () => {
                   "@media (max-width:768px)": {
                     p: 2,
                     ml: 1
+                  },
+                  "&:hover": {
+                    bgcolor: "rgba(21, 101, 192, 0.1)"
                   }
                 }}
               >
@@ -217,10 +220,10 @@ const Navbar: FC = () => {
                     sx={{ 
                       textTransform: "none",
                       bgcolor: "#FFF",
-                      border: "none",
+                      boxSizing: "border-box",
                       "@media (max-width:480px)": {
                         bgcolor: 'transparent',
-                      }
+                      },
                     }}
                   >
                     <Grid container alignItems="center" spacing={1}>
@@ -237,8 +240,8 @@ const Navbar: FC = () => {
                         Add Vehicle
                       </Typography>
                       <ChevronRightIcon 
-                        color="action"
                         sx={{ 
+                          color: "#2d2a26",
                           "@media (max-width:480px)": {
                             display: 'none',
                           } 

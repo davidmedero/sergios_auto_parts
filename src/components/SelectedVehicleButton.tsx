@@ -29,7 +29,10 @@ const SelectedVehicleButton: FC<SelectedVehicleButtonProps> = ({
       "@media (max-width:480px)": {
         width: '100%',
         px: 1,
-      }  
+      },
+      "&:hover": {
+        bgcolor: "rgba(21, 101, 192, 0.1)"
+      }
     }}
   >
     <Box 
@@ -82,7 +85,11 @@ const SelectedVehicleButton: FC<SelectedVehicleButtonProps> = ({
       >
         {vehicleLabel}
       </Typography>
-      <ChevronRightIcon color="action" />
+      <ChevronRightIcon 
+        sx={{ 
+          color: "#2d2a26",
+        }} 
+      />
     </Box>
   </Button>
 );

@@ -13,8 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import PersonIcon from '@mui/icons-material/Person';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from "@mui/icons-material/Search";
 import SelectedVehicleButton from "./SelectedVehicleButton";
 import VehicleSelectorModal from "./VehicleSelectorModal";
@@ -76,7 +76,8 @@ const Navbar: FC = () => {
                 sx={{ 
                   textTransform: "none",
                   "@media (max-width:768px)": {
-                    p: 2
+                    p: 2,
+                    ml: 1
                   }
                 }}
               >
@@ -124,13 +125,37 @@ const Navbar: FC = () => {
                 <Typography
                   variant="subtitle2"
                   fontWeight={600}
-                  sx={{ color: '#E25822', letterSpacing: .5, fontSize: 14 }}
+                  sx={{ 
+                    color: '#E25822',
+                    letterSpacing: .5,
+                    fontSize: 14,
+                    "@media (max-width:480px)": {
+                      fontSize: 12,
+                      whiteSpace: "nowrap",
+                      transform: "scaleX(0.8)",
+                      transformOrigin: "left center",
+                    },
+                    "@media (max-width:350px)": {
+                      fontSize: 11,
+                    }
+                  }}
                 >
                   20% OFF ORDERS OVER $100* + FREE NEXT DAY DELIVERY^
                 </Typography>
                 <Typography
                   variant="caption"
-                  sx={{ color: 'text.secondary', display: 'block', mt: 0.25, fontSize: 12 }}
+                  sx={{ 
+                    color: 'text.secondary', 
+                    display: 'block', 
+                    mt: 0.25, 
+                    fontSize: 12,
+                    "@media (max-width:350px)": {
+                      fontSize: 11,
+                    },
+                    "@media (max-width:330px)": {
+                      fontSize: 10,
+                    }
+                  }}
                 >
                   Eligible Ship-To-Home Items Only. Use Code: DIYSPECIAL
                 </Typography>
@@ -165,9 +190,7 @@ const Navbar: FC = () => {
         <Toolbar 
           sx={{ 
             minHeight: 64, 
-            "@media (max-width:768px)": {
-              px: '16px !important',
-            }   
+            pl: "24px"
           }}
         >
           <Grid container alignItems="center" spacing={2} sx={{ flexWrap: "nowrap", flexGrow: 1, flexShrink: 0, justifyContent: "space-between" }}>
@@ -279,10 +302,10 @@ const Navbar: FC = () => {
                   <SearchIcon />
                 </IconButton>
                 <IconButton sx={{ color: "#2d2a26" }}>
-                  <PersonOutlineIcon />
+                  <PersonIcon />
                 </IconButton>
                 <IconButton sx={{ color: "#2d2a26" }}>
-                  <ShoppingCartOutlinedIcon />
+                  <ShoppingCartIcon />
                 </IconButton>
               </Box>
             </Grid>

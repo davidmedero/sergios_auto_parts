@@ -11,11 +11,6 @@ interface SelectedVehicleButtonProps {
   onClick: () => void;
 }
 
-function clampText(text: string, maxChars = 36) {
-  if (text.length <= maxChars) return text;
-  return text.slice(0, maxChars - 1).trimEnd() + '…';
-}
-
 const SelectedVehicleButton: FC<SelectedVehicleButtonProps> = ({
   vehicleLabel,
   onClick
@@ -72,18 +67,21 @@ const SelectedVehicleButton: FC<SelectedVehicleButtonProps> = ({
       }}
     >
       <Typography
+        variant="body2"
         sx={{
           lineHeight: 1.333,
           color: "#2d2a26",
           fontSize: "12px",
           fontWeight: 400,
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: 2,
           overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
-        variant="body2"
       >
-        {clampText(vehicleLabel, 36)}
+        {vehicleLabel}
       </Typography>
-
       <ChevronRightIcon color="action" />
     </Box>
   </Button>

@@ -219,6 +219,7 @@ const Navbar: FC = () => {
                     onClick={() => setModalOpen(true)}
                     sx={{ 
                       textTransform: "none",
+                      border: "none",
                       bgcolor: "#FFF",
                       boxSizing: "border-box",
                       "@media (max-width:480px)": {

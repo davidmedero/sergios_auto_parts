@@ -546,13 +546,12 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
                     </Grid>
                   ))}
                 </Grid>
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ display: "flex", mt: 2, gap: 1, flexWrap: "wrap" }}>
                   <Button variant="text" onClick={() => { onClose(); router.push('/vehicles'); }}>
                     Manage Vehicles
                   </Button>
                   <Button 
-                    variant="text" 
-                    sx={{ ml: 2 }} 
+                    variant="text"  
                     onClick={() => { 
                       setCurrentVehicleId(null);
                       onClose(); 

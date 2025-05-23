@@ -23,10 +23,12 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { FaCar } from "react-icons/fa";
 import ProductSearch from "./ProductSearch";
 import Menu from "./Menu";
+import Cart from "./Cart";
 
 const Navbar: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { vehicles, currentVehicleId } = useVehicles();
   const currentVehicle = vehicles.find(v => v.id === currentVehicleId) || null;
@@ -303,7 +305,12 @@ const Navbar: FC = () => {
                 <IconButton sx={{ color: "#2d2a26" }}>
                   <PersonIcon />
                 </IconButton>
-                <IconButton sx={{ color: "#2d2a26" }}>
+                <IconButton 
+                  sx={{ 
+                    color: "#2d2a26" 
+                  }}
+                  onClick={() => setCartOpen(true)}
+                >
                   <ShoppingCartIcon />
                 </IconButton>
               </Box>
@@ -337,6 +344,12 @@ const Navbar: FC = () => {
         open={drawerOpen}
         onOpen={() => setDrawerOpen(true)}
         onClose={() => setDrawerOpen(false)}
+      />
+      {/* Cart Swipeable Drawer */}
+      <Cart
+        open={cartOpen}
+        onOpen={() => setCartOpen(true)}
+        onClose={() => setCartOpen(false)}
       />
     </>
   );

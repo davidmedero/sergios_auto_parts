@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
-  Grid,
   Autocomplete,
   TextField,
   InputAdornment,
@@ -79,58 +78,51 @@ export default function ProductSearch() {
   };
 
   return (
-    <Grid
-      sx={{
-        width: '100%',
-        '@media (max-width:700px)': { display: 'none' },
-      }}
-    >
-      <Autocomplete<Product, false, false, true>
-        freeSolo
-        options={options}
-        getOptionLabel={(opt) =>
-          typeof opt === 'string' ? opt : opt.name
+    <Autocomplete<Product, false, false, true>
+      freeSolo
+      options={options}
+      getOptionLabel={(opt) =>
+        typeof opt === 'string' ? opt : opt.name
+      }
+      inputValue={inputValue}
+      onInputChange={handleInputChange}
+      sx={{ 
+        "& .MuiOutlinedInput-root": {
+          px: "10px !important",
         }
-        inputValue={inputValue}
-        onInputChange={handleInputChange}
-        sx={{ 
-          "& .MuiOutlinedInput-root": {
-            px: "10px !important",
-          }
-         }}
-        renderInput={params => (
-          <TextField
-            {...params}
-            placeholder="Find Parts and Products"
-            variant="outlined"
-            size="small"
-            sx={{ bgcolor: '#FFF' }}
-            InputProps={{
-              ...params.InputProps,
-              // left search icon
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
+        }}
+      renderInput={params => (
+        <TextField
+          {...params}
+          placeholder="Find Parts and Products"
+          variant="outlined"
+          size="small"
+          sx={{ bgcolor: '#FFF' }}
+          InputProps={{
+            ...params.InputProps,
+            // left search icon
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            // right “| SEARCH” after you type at least 1 char
+            ...(inputValue.length > 0 && {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                  <Button 
+                    variant="text"
+                    size="small"
+                  >
+                    SEARCH
+                  </Button>
                 </InputAdornment>
               ),
-              // right “| SEARCH” after you type at least 1 char
-              ...(inputValue.length > 0 && {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-                    <Button 
-                      variant="text"
-                      size="small"
-                    >
-                      SEARCH
-                    </Button>
-                  </InputAdornment>
-                ),
-              }),
-            }}
-          />
-        )}
-      />
-    </Grid>
+            }),
+          }}
+        />
+      )}
+    />
   );
 }

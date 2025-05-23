@@ -56,6 +56,7 @@ const menuData = [
 
 const Navbar: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openCat, setOpenCat] = useState<Record<string, boolean>>({});
   const [openSub, setOpenSub] = useState<Record<string, boolean>>({});
@@ -298,16 +299,15 @@ const Navbar: FC = () => {
             {/* Search bar and Manage Vehicles Container */}
             <Grid container alignItems="center" sx={{ width: "100%", flexWrap: "nowrap", flexGrow: 1 }}>
               {/* Search bar */}
-              <Grid 
+              <Grid
                 sx={{
-                  width: "100%",
-                  "@media (max-width:700px)": {
-                    display: 'none',
-                  } 
+                  width: '100%',
+                  '@media (max-width:700px)': { display: 'none' },
                 }}
               >
                 <ProductSearch />
               </Grid>
+              
 
               <Box 
                 sx={{ 
@@ -328,6 +328,7 @@ const Navbar: FC = () => {
                       display: 'flex',
                     } 
                   }}
+                  onClick={() => setMobileSearchOpen((o) => !o)}
                 >
                   <SearchIcon />
                 </IconButton>
@@ -342,6 +343,20 @@ const Navbar: FC = () => {
             
           </Grid>
         </Toolbar>
+        {/* mobile search input */}
+        <Collapse
+          in={mobileSearchOpen}
+          timeout={300}
+          sx={{
+            '@media (min-width:701px)': { display: 'none' },
+            bgcolor: '#FFF',
+          }}
+          unmountOnExit
+        >
+          <Box sx={{ p: 1 }}>
+            <ProductSearch />
+          </Box>
+        </Collapse>
       </AppBar>
 
       {/* Vehicle Selector Modal */}

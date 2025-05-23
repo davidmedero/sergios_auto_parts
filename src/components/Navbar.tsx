@@ -8,11 +8,17 @@ import {
   Grid,
   Button,
   IconButton,
-  TextField,
-  InputAdornment,
   Typography,
+  ListItemButton,
+  List,
+  ListItemText,
+  Collapse,
+  SwipeableDrawer,
+  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from "@mui/icons-material/Search";
@@ -22,10 +28,37 @@ import { useVehicles } from "@/contexts/VehiclesContext";
 import { useRouter } from "next/navigation";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { FaCar } from "react-icons/fa";
+import ProductSearch from "./ProductSearch";
+import CloseIcon from '@mui/icons-material/Close';
 
+const menuData = [
+  {
+    name: "Batteries, Starting and Charging",
+    subcategories: [
+      {
+        name: "Alternators and Charging System",
+        children: ["Alternator", "Voltage Regulator"],
+      },
+      { name: "Batteries", children: [] },
+      /* … */
+    ],
+  },
+  {
+    name: "Drivetrain",
+    subcategories: [
+      { name: "Axle", children: [] },
+      { name: "Transmission", children: [] },
+      /* … */
+    ],
+  },
+  // …add more categories here
+];
 
 const Navbar: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [openCat, setOpenCat] = useState<Record<string, boolean>>({});
+  const [openSub, setOpenSub] = useState<Record<string, boolean>>({});
   const { vehicles, currentVehicleId } = useVehicles();
   const currentVehicle = vehicles.find(v => v.id === currentVehicleId) || null;
   const router = useRouter();
@@ -201,7 +234,12 @@ const Navbar: FC = () => {
             <Grid container alignItems="center" sx={{ flexWrap: "nowrap", flexShrink: 0 }}>
               {/* Hamburger */}
               <Grid>
-                <IconButton size="large" edge="start" sx={{ color: "#2d2a26" }}>
+                <IconButton 
+                  size="large" 
+                  edge="start" 
+                  sx={{ color: "#2d2a26" }}
+                  onClick={() => setOpenDrawer(true)}
+                >
                   <MenuIcon />
                 </IconButton>
               </Grid>
@@ -222,6 +260,9 @@ const Navbar: FC = () => {
                       border: "none",
                       bgcolor: "#FFF",
                       boxSizing: "border-box",
+                      "&:hover": {
+                        bgcolor: "rgba(21, 101, 192, 0.1)"
+                      },
                       "@media (max-width:480px)": {
                         bgcolor: 'transparent',
                       },
@@ -265,22 +306,7 @@ const Navbar: FC = () => {
                   } 
                 }}
               >
-                <TextField
-                  fullWidth
-                  placeholder="Find Parts and Products"
-                  variant="outlined"
-                  size="small"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    bgcolor: "#FFF"
-                  }}
-                />
+                <ProductSearch />
               </Grid>
 
               <Box 
@@ -323,6 +349,81 @@ const Navbar: FC = () => {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
       />
+
+      <SwipeableDrawer
+        anchor="left"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        onOpen={() => setOpenDrawer(true)}
+      >
+        <Box sx={{ width: 376 }}>
+          {/* Drawer Header */}
+          <Box sx={{ position: "relative", px: 2, py: "10px" }}>
+            <Typography variant="h6">Menu</Typography>
+            <IconButton
+              edge="end"
+              onClick={() => setOpenDrawer(false)}
+              aria-label="close"
+              sx={{ position: "absolute", right: 18, top: 6 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Divider />
+          
+          <List>
+            {menuData.map((cat) => (
+              <React.Fragment key={cat.name}>
+                <ListItemButton
+                  onClick={() =>
+                    setOpenCat((prev) => ({
+                      ...prev,
+                      [cat.name]: !prev[cat.name],
+                    }))
+                  }
+                >
+                  <ListItemText primary={cat.name} />
+                  {openCat[cat.name] ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={openCat[cat.name]} unmountOnExit>
+                  <List component="div" disablePadding>
+                    {cat.subcategories.map((sub) => (
+                      <React.Fragment key={sub.name}>
+                        <ListItemButton
+                          sx={{ pl: 4 }}
+                          onClick={() =>
+                            setOpenSub((prev) => ({
+                              ...prev,
+                              [sub.name]: !prev[sub.name],
+                            }))
+                          }
+                        >
+                          <ListItemText primary={sub.name} />
+                          {sub.children.length > 0 &&
+                            (openSub[sub.name] ? (
+                              <ExpandLess />
+                            ) : (
+                              <ExpandMore />
+                            ))}
+                        </ListItemButton>
+                        <Collapse in={openSub[sub.name]} unmountOnExit>
+                          <List component="div" disablePadding>
+                            {sub.children.map((child) => (
+                              <ListItemButton sx={{ pl: 8 }} key={child}>
+                                <ListItemText primary={child} />
+                              </ListItemButton>
+                            ))}
+                          </List>
+                        </Collapse>
+                      </React.Fragment>
+                    ))}
+                  </List>
+                </Collapse>
+              </React.Fragment>
+            ))}
+          </List>
+        </Box>
+      </SwipeableDrawer>
     </>
   );
 };

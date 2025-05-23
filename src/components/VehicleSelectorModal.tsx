@@ -132,9 +132,7 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
   const handleConfirm = () => {
     const label = tabIndex === 0
       ? `${year} ${make?.label ?? ''} ${model ?? ''} ${engine ?? ''}`.trim()
-      : tabIndex === 1
-      ? `${selectedState?.code ?? ''} ${licensePlate}`.trim()
-      : `VIN: ${vin}`;
+      : "";
 
     const newVehicle: Vehicle = {
       id: crypto.randomUUID(),
@@ -212,6 +210,56 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
       handleConfirm();
     }
   }, [engine]);
+
+  const handleLicenseLookup = async () => {
+    if (!selectedState || !licensePlate.trim()) return;
+
+    const lookup = licensePlate.trim().toUpperCase();
+    try {
+      const res = await fetch(
+        `/api/license-decode?license_plate=${lookup}&state=${selectedState.code}`
+      );
+      if (!res.ok) throw new Error(`Lookup failed (${res.status})`);
+
+      const json = await res.json();
+      console.log("decoded plate data:", json);
+      const basic = json.data.basic;
+      const label = `${basic.year} ${basic.make} ${basic.model}`;
+
+      const newVehicle: Vehicle = {
+        id: crypto.randomUUID(),
+        label,
+      };
+
+      addVehicle(newVehicle);
+    } catch (err) {
+      console.error("License-decode error:", err);
+    }
+  };
+
+  const handleVinLookup = async () => {
+    const rawVin = vin.trim();
+    if (!rawVin) return;
+
+    try {
+      const res = await fetch(`/api/vin-decode?vin=${encodeURIComponent(rawVin)}`);
+      if (!res.ok) throw new Error(`VIN lookup failed (${res.status})`);
+
+      const json = await res.json();
+      console.log("decoded VIN data:", json);
+      const basic = json.data.basic; 
+      const label = `${basic.year} ${basic.make} ${basic.model}`;
+
+      const newVehicle: Vehicle = {
+        id: crypto.randomUUID(),
+        label,
+      };
+
+      addVehicle(newVehicle)
+    } catch (err) {
+      console.error("VIN-decode error:", err);
+    }
+  };
 
   
   return (
@@ -347,41 +395,65 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
         )}
 
         {tabIndex === 1 && (
-          <Box sx={{ mt: 2 }}>
-            <Grid container spacing={2} alignItems="center">
-              {/* State Selector */}
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <Autocomplete<StateOption, false, false, false>
-                  options={stateOptions}
-                  getOptionLabel={(opt) => opt.name}
-                  value={selectedState}
-                  onChange={(_, v) => setSelectedState(v)}
-                  renderInput={(params) => <TextField {...params} label="State" />}                
-                />
-              </Grid>
-
-              {/* License Plate Input */}
-              <Grid size={{ xs: 12, sm: 9 }}>
-                <TextField
-                  fullWidth
-                  label="License Plate"
-                  value={licensePlate}
-                  onChange={(e) => setLicensePlate(e.target.value)}
-                />
-              </Grid>
+          <Grid container spacing={2} alignItems="center"  sx={{ mt: 2 }}>
+            {/* State Selector */}
+            <Grid size={{ xs: 12, sm: 3 }}>
+              <Autocomplete<StateOption, false, false, false>
+                options={stateOptions}
+                getOptionLabel={(opt) => opt.name}
+                value={selectedState}
+                onChange={(_, v) => setSelectedState(v)}
+                renderInput={(params) => <TextField {...params} label="State" />}                
+              />
             </Grid>
-          </Box>
+
+            {/* License Plate Input */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="License Plate"
+                value={licensePlate}
+                onChange={(e) => setLicensePlate(e.target.value)}
+              />
+            </Grid>
+
+            {/* Lookup Button */}
+            <Grid size={{ xs: 12, sm: 3 }}>
+              <Button
+                variant="contained"
+                fullWidth
+                disabled={!selectedState || !licensePlate.trim()}
+                onClick={handleLicenseLookup}
+              >
+                Lookup Plate
+              </Button>
+            </Grid>
+          </Grid>
         )}
 
         {tabIndex === 2 && (
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              label="VIN"
-              value={vin}
-              onChange={(e) => setVin(e.target.value)}
-            />
-          </Box>
+          <Grid container spacing={2} alignItems="center" sx={{ mt: 2 }}>
+            <Grid size={{ xs: 12, sm: 9 }}>
+              <Box>
+                <TextField
+                  fullWidth
+                  label="VIN"
+                  value={vin}
+                  onChange={(e) => setVin(e.target.value)}
+                />
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 3 }}>
+              <Button
+                variant="contained"
+                fullWidth
+                disabled={!vin.trim()}
+                onClick={handleVinLookup}
+              >
+                Lookup VIN
+              </Button>
+            </Grid>
+          </Grid>
         )}
         {
           vehicles.length === 0 ? (

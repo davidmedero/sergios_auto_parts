@@ -43,47 +43,51 @@ export default function Cart({ open, onOpen, onClose }: CartProps) {
       disableBackdropTransition={!iOS}
       disableDiscovery={iOS}
     >
-      <Box sx={{ width: 376 }}>
+      <Box sx={{ width: 376, minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         {/* Header */}
-        <Box sx={{ position: 'relative', px: 2, py: "10px" }}>
-          <Typography variant="h6">Your Cart</Typography>
-          <IconButton
-            edge="end"
-            onClick={onClose}
-            aria-label="close"
-            sx={{ position: 'absolute', right: 18, top: 6 }}
-          >
-            <CloseIcon />
-          </IconButton>
+        <Box>
+          <Box sx={{ position: 'relative', px: 2, py: "10px" }}>
+            <Typography variant="h6">Your Cart</Typography>
+            <IconButton
+              edge="end"
+              onClick={onClose}
+              aria-label="close"
+              sx={{ position: 'absolute', right: 18, top: 6 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          <Divider />
+
+          {/* Cart items */}
+          <List disablePadding>
+            {cartItems.map((item) => (
+              <ListItem key={item.id} sx={{ py: 1 }}>
+                <ListItemText
+                  primary={`${item.name} x${item.qty}`}
+                  secondary={`$${(item.price * item.qty).toFixed(2)}`}
+                />
+              </ListItem>
+            ))}
+          </List>
         </Box>
-
-        <Divider />
-
-        {/* Cart items */}
-        <List disablePadding>
-          {cartItems.map((item) => (
-            <ListItem key={item.id} sx={{ py: 1 }}>
-              <ListItemText
-                primary={`${item.name} x${item.qty}`}
-                secondary={`$${(item.price * item.qty).toFixed(2)}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-
-        <Divider />
 
         {/* Total & Checkout */}
-        <Box sx={{ mt: 2, px: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="subtitle1">Total:</Typography>
-          <Typography variant="h6">${total}</Typography>
-        </Box>
+        <Box sx={{ my: 2 }}>
+          <Divider />
+          <Box sx={{ mt: 2, px: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="subtitle1">Total:</Typography>
+            <Typography variant="h6">${total}</Typography>
+          </Box>
 
-        <Box sx={{ mx: 2, mt: 2  }}>
-          <Button variant="contained" color="primary" fullWidth>
-            Checkout
-          </Button>
+          <Box sx={{ mx: 2, mt: 2  }}>
+            <Button variant="contained" color="primary" fullWidth>
+              Checkout
+            </Button>
+          </Box>
         </Box>
+        
       </Box>
     </SwipeableDrawer>
   );

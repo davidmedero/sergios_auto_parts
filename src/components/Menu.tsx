@@ -74,7 +74,14 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
             <React.Fragment key={cat.id}>
               {/* Level 1 */}
               <ListItemButton onClick={() => toggleCat(cat.id)}>
-                <ListItemText primary={cat.name} />
+                <ListItemText 
+                  primary={cat.name}
+                  sx={{ 
+                    "& .MuiTypography-root": {
+                      fontWeight: 600
+                    } 
+                  }} 
+                />
                 {cat.children.length > 0 && (openCat[cat.id] ? <ExpandLess/> : <ExpandMore/>)}
               </ListItemButton>
 
@@ -83,18 +90,32 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
                 <List component="div" disablePadding>
                   {cat.children.map(sub => (
                     <React.Fragment key={sub.id}>
-                      <ListItemButton sx={{ pl: 4 }} onClick={() => toggleSub(sub.id)}>
-                        <ListItemText primary={sub.name} />
+                      <ListItemButton sx={{ pl: 4, borderBottom: sub.children.length > 0 && openSub[sub.id] ? "1px solid #EAEAEA" : "", bgcolor: sub.children.length > 0 && openSub[sub.id] ? "#F2F2F2" : "" }} onClick={() => toggleSub(sub.id)}>
+                        <ListItemText 
+                          primary={sub.name} 
+                          sx={{ 
+                            "& .MuiTypography-root": {
+                              fontSize: "14px"
+                            } 
+                          }} 
+                        />
                         {sub.children.length > 0 &&
                           (openSub[sub.id] ? <ExpandLess/> : <ExpandMore/>)}
                       </ListItemButton>
 
                       {/* Level 3 */}
                       <Collapse in={openSub[sub.id]} unmountOnExit>
-                        <List component="div" disablePadding>
+                        <List component="div" disablePadding >
                           {sub.children.map(child => (
                             <ListItemButton sx={{ pl: 8 }} key={child.id}>
-                              <ListItemText primary={child.name} />
+                              <ListItemText 
+                                primary={child.name}
+                                sx={{ 
+                                  "& .MuiTypography-root": {
+                                    fontSize: "14px"
+                                  } 
+                                }} 
+                              />
                             </ListItemButton>
                           ))}
                         </List>

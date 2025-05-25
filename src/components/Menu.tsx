@@ -16,6 +16,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import useSWR from 'swr';
 import { fetchCategoryTree } from '@/lib/getCategories';
 import { CatNode } from '@/lib/categories';
+import { useRouter } from "next/navigation";
 
 interface MenuProps {
   open: boolean;
@@ -26,6 +27,7 @@ interface MenuProps {
 export default function Menu({ open, onOpen, onClose }: MenuProps) {
   const [openCat, setOpenCat] = useState<Record<string,boolean>>({});
   const [openSub, setOpenSub] = useState<Record<string,boolean>>({});
+  const router = useRouter();
 
   const toggleCat = (id: string) =>
     setOpenCat(prev => ({ ...prev, [id]: !prev[id] }));
@@ -78,7 +80,7 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
                   primary={cat.name}
                   sx={{ 
                     "& .MuiTypography-root": {
-                      fontWeight: 600
+                      fontWeight: cat.children.length > 0 && openCat[cat.id] ? 600 : 500,     
                     } 
                   }} 
                 />
@@ -107,7 +109,14 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
                       <Collapse in={openSub[sub.id]} unmountOnExit>
                         <List component="div" disablePadding >
                           {sub.children.map(child => (
-                            <ListItemButton sx={{ pl: 8 }} key={child.id}>
+                            <ListItemButton 
+                              sx={{ pl: 8 }} 
+                              key={child.id}
+                              onClick={() => {
+                                router.push(`/${cat.handle}/${sub.handle}/${child.handle}`);
+                                onClose();
+                              }}
+                            >
                               <ListItemText 
                                 primary={child.name}
                                 sx={{ 

@@ -2,6 +2,7 @@ import { storefront } from './shopify';
 
 export interface Cat {
   id:       string;
+  handle:   string;
   name:     string;
   parentId: string | null;
 }
@@ -11,13 +12,14 @@ export interface CatNode extends Cat {
 }
 
 interface Field {
-  key:   string;
+  key: string;
   value: string | null;
 }
 
 interface CategoryNode {
   node: {
-    id:     string;
+    id: string;
+    handle: string;
     fields: Field[];
   };
 }
@@ -32,6 +34,7 @@ const CATEGORY_QUERY = `
       edges {
         node {
           id
+          handle
           fields {
             key
             value
@@ -46,7 +49,7 @@ const CATEGORY_QUERY = `
  * Convert raw GraphQL edges into flat Cat[]
  */
 function parseRaw(edges: CategoryNode[]): Cat[] {
-  return edges.map(({ node: { id, fields } }) => {
+  return edges.map(({ node: { id, handle, fields } }) => {
     const lookup = (key: string) => fields.find(f => f.key === key)?.value ?? null;
 
     // the "parent" field is stored as a JSON-stringified array of GIDs
@@ -57,6 +60,7 @@ function parseRaw(edges: CategoryNode[]): Cat[] {
 
     return {
       id,
+      handle,
       name:     lookup('name')!,
       parentId,
     };

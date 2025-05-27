@@ -86,12 +86,8 @@ const COLLECTION_PRODUCTS_QUERY = `
   }
 `;
 
-export default async function CatchAllPage({ params, searchParams }: {
-    params: { slug: string[] };
-    searchParams: Record<string, string | string[] | undefined>;
-  }
-) {
-  console.log('searchParams', searchParams)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function CatchAllPage({ params }: any) {
   const segments = params.slug ?? [];
 
   // — A) PRODUCT DETAIL — if exactly one segment, try loading as product
@@ -123,7 +119,8 @@ export default async function CatchAllPage({ params, searchParams }: {
   }
 
   // Determine breadcrumbs names
-  const names = segments.map((_, i) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const names = segments.map((_: any, i: number) => {
     let lvl = tree;
     let found: CatNode | undefined;
     for (let j = 0; j <= i; j++) {

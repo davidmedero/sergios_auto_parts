@@ -7,10 +7,6 @@ import ProductPage      from '@/components/ProductPage';
 import CategoryPage     from '@/components/CategoryPage';
 import ProductListPage  from '@/components/ProductListPage';
 
-interface Props {
-  params: { slug: string[] };
-}
-
 export const revalidate = 60;
 
 // 1) Single‐product query
@@ -90,7 +86,9 @@ const COLLECTION_PRODUCTS_QUERY = `
   }
 `;
 
-export default async function CatchAllPage({ params }: Props) {
+export default async function CatchAllPage({ params }: {
+  params: { slug: string[] };
+}) {
   const segments = params.slug ?? [];
 
   // — A) PRODUCT DETAIL — if exactly one segment, try loading as product

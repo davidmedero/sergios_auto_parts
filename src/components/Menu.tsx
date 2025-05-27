@@ -16,7 +16,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import useSWR from 'swr';
 import { fetchCategoryTree } from '@/lib/getCategories';
 import { CatNode } from '@/lib/categories';
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface MenuProps {
   open: boolean;
@@ -27,7 +27,6 @@ interface MenuProps {
 export default function Menu({ open, onOpen, onClose }: MenuProps) {
   const [openCat, setOpenCat] = useState<Record<string,boolean>>({});
   const [openSub, setOpenSub] = useState<Record<string,boolean>>({});
-  const router = useRouter();
 
   const toggleCat = (id: string) =>
     setOpenCat(prev => ({ ...prev, [id]: !prev[id] }));
@@ -107,26 +106,37 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
 
                       {/* Level 3 */}
                       <Collapse in={openSub[sub.id]} unmountOnExit>
-                        <List component="div" disablePadding >
-                          {sub.children.map(child => (
-                            <ListItemButton 
-                              sx={{ pl: 8 }} 
-                              key={child.id}
-                              onClick={() => {
-                                router.push(`/${cat.handle}/${sub.handle}/${child.handle}`);
-                                onClose();
-                              }}
-                            >
-                              <ListItemText 
-                                primary={child.name}
-                                sx={{ 
-                                  "& .MuiTypography-root": {
-                                    fontSize: "14px"
-                                  } 
-                                }} 
-                              />
-                            </ListItemButton>
-                          ))}
+                        <List component="div" disablePadding>
+                          {sub.children.map(child => {
+                            const href = `/${cat.handle}/${sub.handle}/${child.handle}`;
+                            return (
+                              <Link 
+                                key={child.id}
+                                href={href}
+                                passHref
+                                style={{ 
+                                  color: 'inherit',
+                                  textDecoration: 'none'
+                                }}
+                              >
+                                <ListItemButton
+                                  component="a"
+                                  sx={{ pl: 8 }}
+                                  onClick={onClose}
+                                >
+                                  <ListItemText
+                                    primary={child.name}
+                                    sx={{
+                                      "& .MuiTypography-root": {
+                                        fontSize: "14px",
+                                      },
+                                      
+                                    }}
+                                  />
+                                </ListItemButton>
+                              </Link>
+                            );
+                          })}
                         </List>
                       </Collapse>
                     </React.Fragment>

@@ -8,7 +8,7 @@ import CategoryPage     from '@/components/CategoryPage';
 import ProductListPage  from '@/components/ProductListPage';
 
 interface Props {
-  params: { slug?: string[] };
+  params: { slug: string[] };
 }
 
 export const revalidate = 60;

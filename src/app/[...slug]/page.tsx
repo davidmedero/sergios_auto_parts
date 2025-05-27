@@ -86,9 +86,12 @@ const COLLECTION_PRODUCTS_QUERY = `
   }
 `;
 
-export default async function CatchAllPage({ params }: {
-  params: { slug: string[] };
-}) {
+export default async function CatchAllPage({ params, searchParams }: {
+    params: { slug: string[] };
+    searchParams: Record<string, string | string[] | undefined>;
+  }
+) {
+  console.log('searchParams', searchParams)
   const segments = params.slug ?? [];
 
   // — A) PRODUCT DETAIL — if exactly one segment, try loading as product

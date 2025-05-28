@@ -30,10 +30,19 @@ const PRODUCT_QUERY = `
         }
       }
 
+      partNumber: metafield(namespace: "custom", key: "part_number") {
+        value
+      }
+
+      specs: metafield(namespace: "custom", key: "specifications") {
+        value
+      }
+
       variants(first: 1) {
         edges {
           node {
             price { amount currencyCode }
+            sku
           }
         }
       }

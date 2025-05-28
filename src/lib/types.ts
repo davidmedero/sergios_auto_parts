@@ -8,7 +8,6 @@ export interface ProductByHandleQuery {
     id:          string;
     title:       string;
     description: string;
-
     imagesJson: {
       references: {
         nodes: Array<{
@@ -17,11 +16,17 @@ export interface ProductByHandleQuery {
         }>;
       };
     } | null;
-
+    partNumber: {
+      value: string
+    };
+    specs: {
+      value: string
+    };
     variants: {
       edges: Array<{
         node: {
           price: Money;
+          sku: string;
         };
       }>;
     };

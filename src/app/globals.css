@@ -4,4 +4,52 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overscroll-behavior: contain;
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(.4,0,.22,1);
+  /* will-change: opacity; */
+}
+
+.fade-in.show {
+  opacity: 1;
+}
+
+@media(max-width: 616px) {
+  .simplebar-scrollable-y {
+    display: none;
+  }
+}
+
+@media(min-width: 617px) {
+  .simplebar-scrollable-y {
+    display: flex;
+  }
+}
+
+.simplebar-track {
+  pointer-events: auto !important;
+}
+
+.simplebar-scrollbar {
+  pointer-events: auto !important;
+  cursor: grab !important;
+}
+
+.simplebar-scrollbar:active {
+  cursor: grabbing !important;
+}
+
+.simplebar-height-auto-observer-wrapper {
+  pointer-events: auto !important;
+}
+
+.simplebar-placeholder {
+  pointer-events: auto !important;
+}
+
+.simplebar-height-auto-observer {
+  pointer-events: auto !important;
 }

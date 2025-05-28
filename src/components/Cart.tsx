@@ -42,6 +42,7 @@ export default function Cart({ open, onOpen, onClose }: CartProps) {
       onOpen={onOpen}
       disableBackdropTransition={!iOS}
       disableDiscovery={iOS}
+      swipeAreaWidth={0}
     >
       <Box sx={{ width: 376, minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         {/* Header */}

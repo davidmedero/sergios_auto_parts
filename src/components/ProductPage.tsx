@@ -1,59 +1,52 @@
 'use client';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import type { FC } from 'react';
 import type { ProductByHandleQuery, Money } from '@/lib/types';
+import ProductImages from './ProductImages';
+import ProductInfo   from './ProductInfo';
+import FadeInSection from '@/hooks/FadeInSection';
 
 interface Props {
   product: NonNullable<ProductByHandleQuery['productByHandle']>;
 }
 
-export default function ProductPage({ product }: Props) {
+const ProductPage: FC<Props> = ({ product }) => {
   const { title, description, imagesJson, variants } = product;
 
-  // Extract all image URLs from the references
+  // extract URLs from the MediaImage references
   const urls = imagesJson?.references.nodes
     .filter(n => n.__typename === 'MediaImage')
     .map(n => n.image.url) ?? [];
 
-  const firstUrl = urls[0];
   const priceNode = variants.edges[0]?.node.price as Money | undefined;
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        {title}
-      </Typography>
-
-      {firstUrl && (
-        <Box
-          component="img"
-          src={firstUrl}
-          alt={title}
-          sx={{
-            maxWidth: 400,
-            width: '100%',
-            height: 'auto',
-            mb: 3,
-            display: 'block',
-          }}
+    <FadeInSection>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          pl: 3,
+          '@media (max-width: 980px)': {
+            flexDirection: 'column',
+            alignItems: 'center',
+            pl: 0,
+          },
+          gap: 3,
+          mx: 'auto'
+        }}
+      >
+        <ProductImages urls={urls} />
+        <ProductInfo
+          title={title}
+          description={description}
+          price={priceNode}
         />
-      )}
-
-      <Typography variant="body1" paragraph>
-        {description}
-      </Typography>
-
-      {priceNode && (
-        <Typography variant="h5" gutterBottom>
-          {priceNode.amount} {priceNode.currencyCode}
-        </Typography>
-      )}
-
-      <Button variant="contained" size="large">
-        Add to Cart
-      </Button>
-    </Box>
+      </Box>
+    </FadeInSection>
   );
-}
+};
+
+export default ProductPage;

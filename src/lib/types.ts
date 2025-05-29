@@ -7,7 +7,7 @@ export interface ProductByHandleQuery {
   productByHandle: {
     id:          string;
     title:       string;
-    description: string;
+    descriptionHtml: string;
     imagesJson: {
       references: {
         nodes: Array<{

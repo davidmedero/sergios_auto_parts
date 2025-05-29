@@ -15,7 +15,7 @@ const PRODUCT_QUERY = `
     productByHandle(handle: $handle) {
       id
       title
-      description
+      descriptionHtml
 
       imagesJson: metafield(namespace: "custom", key: "images") {
         references(first: 10) {

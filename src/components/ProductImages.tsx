@@ -1329,7 +1329,7 @@ export default function ProductImages({ urls }: Props) {
     thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
       if (img) {
         img.style.border =
-          i === index ? '2px solid #1565C0' : '0px solid transparent';
+          i === index ? '2px solid #2d2a26' : '0px solid transparent';
       }
     });
   }
@@ -1377,15 +1377,25 @@ export default function ProductImages({ urls }: Props) {
       <Box
         sx={{
           transition: 'top 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-          overflow: 'hidden',
           height: '506px',
           maxHeight: '506px',
           pl: 3,
-          '@media (max-width: 664px)': { height: 'calc(67vw + 6px)' },
-          '@media (max-width: 980px)': { pl: 0 }
+          '@media (max-width: 980px)': { pl: 0 },
+          '@media (max-width: 664px)': {
+            height: '100%',
+            maxHeight: '590px',
+          }
         }}
       >
-        <Grid container spacing={2}>
+        <Grid 
+          container 
+          spacing={2} 
+          sx={{ 
+            '@media (max-width: 664px)': {
+              flexDirection: 'column-reverse',
+            }
+          }}
+        >
           {/* Left Column — Thumbnails */}
           <SimpleBarReact forceVisible="y" autoHide={false} style={{ height: '500px', width: '100px' }} ref={simpleBarRef}>
             <Grid
@@ -1397,7 +1407,11 @@ export default function ProductImages({ urls }: Props) {
                 display: urls.length > 1 ? 'flex' : 'none',
                 gap: 1,
                 width: '100px',
-                pr: 1.1
+                pr: 1.1,
+                '@media (max-width: 664px)': {
+                  width: '100%',
+                  flexDirection: 'row',
+                }
               }}
             >
               {urls.map((url, i) => (

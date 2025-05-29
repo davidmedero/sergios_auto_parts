@@ -13,7 +13,7 @@ interface Props {
 }
 
 const ProductPage: FC<Props> = ({ product }) => {
-  const { title, description, imagesJson, variants, partNumber, specs } = product;
+  const { title, descriptionHtml, imagesJson, variants, partNumber, specs } = product;
 
   // extract URLs from the MediaImage references
   const urls = imagesJson?.references.nodes
@@ -50,7 +50,7 @@ const ProductPage: FC<Props> = ({ product }) => {
 
       <FadeInSection>
         <ProductSpecs
-          description={description}
+          descriptionHtml={descriptionHtml}
           specs={specs}
         />
       </FadeInSection>

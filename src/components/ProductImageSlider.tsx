@@ -250,7 +250,7 @@ const ProductImageSlider = ({
     thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
       if (img) {
         img.style.border =
-          i === 0 ? '2px solid #1565C0' : '0px solid transparent';
+          i === 0 ? '2px solid #2d2a26' : '0px solid transparent';
       }
     });
   }, []);
@@ -260,7 +260,7 @@ const ProductImageSlider = ({
       thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
         if (img) {
           img.style.border =
-            i === index ? '2px solid #1565C0' : '0px solid transparent';
+            i === index ? '2px solid #2d2a26' : '0px solid transparent';
         }
       });
       selectedIndex.current = index;
@@ -726,7 +726,7 @@ const ProductImageSlider = ({
     thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
       if (img) {
         img.style.border =
-          i === index ? '2px solid #1565C0' : '0px solid transparent';
+          i === index ? '2px solid #2d2a26' : '0px solid transparent';
       }
     });
     if (!simpleBarRef.current) return;
@@ -750,14 +750,28 @@ const ProductImageSlider = ({
       simpleBarScrollElement.style.scrollBehavior = "";
     }, 1000);
 
-    if (
-      thumbnailTop < simpleBarScrollElement.scrollTop ||
-      thumbnailBottom > simpleBarScrollElement.scrollTop + containerHeight
-    ) {
-      simpleBarScrollElement.scrollTop =
-        thumbnailTop - containerHeight / 2 + thumbnail.offsetHeight / 2;
+    if (windowSize.width > 664) {
+      if (
+        thumbnailTop < simpleBarScrollElement.scrollTop ||
+        thumbnailBottom > simpleBarScrollElement.scrollTop + containerHeight
+      ) {
+        simpleBarScrollElement.scrollTop =
+          thumbnailTop - containerHeight / 2 + thumbnail.offsetHeight / 2;
+      }
+    } else {
+      // ─── HORIZONTAL CENTERING ─────────────────────────────
+      const cw = simpleBarScrollElement.clientWidth;
+      const left  = thumbnail.offsetLeft;
+      const right = left + thumbnail.offsetWidth;
+      const cur   = simpleBarScrollElement.scrollLeft;
+
+      // if out‐of‐view → center it
+      if (left < cur || right > cur + cw) {
+        const target = left - (cw - thumbnail.offsetWidth) / 2;
+        simpleBarScrollElement.scrollLeft = Math.max(0, target);
+      }
     }
-    
+
     return () => clearTimeout(timeout);
   };
 
@@ -894,7 +908,7 @@ const ProductImageSlider = ({
       thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
         if (img) {
           img.style.border =
-            i === index ? '2px solid #1565C0' : '0px solid transparent';
+            i === index ? '2px solid #2d2a26' : '0px solid transparent';
         }
       });
       if (!simpleBarRef.current) return;
@@ -1270,7 +1284,7 @@ const ProductImageSlider = ({
             display: 'block',
             height: '100%',
             width: '0%',            // start at 0
-            bgcolor: 'primary.main',
+            bgcolor: '#2d2a26',
             transition: 'width 0.2s ease-out',
           }}
         />

@@ -14,7 +14,7 @@ interface SpecRow {
 
 interface Props {
   specs: { value: string };
-  description: string;
+  descriptionHtml: string;
 }
 
 type TextNode = { type: 'text'; value: string }
@@ -22,7 +22,7 @@ type ParagraphNode = { type: 'paragraph'; children: TextNode[] }
 
 export default function ProductSpecs({
   specs,
-  description
+  descriptionHtml
 }: Props) {
   const rows = React.useMemo<SpecRow[]>(() => {
     if (!specs) return []
@@ -79,7 +79,8 @@ export default function ProductSpecs({
           gutterBottom 
           sx={{ 
             '@media (max-width: 664px)': {
-              px: 2
+              px: 2,
+              color: "#2d2a26"
             } 
           }}
         >
@@ -107,7 +108,7 @@ export default function ProductSpecs({
                 <Typography
                   variant="body1"
                   fontSize='16px'
-                  sx={{ flex: 1, fontWeight: 500, color: 'text.primary' }}
+                  sx={{ flex: 1, fontWeight: 500, color: "#2d2a26" }}
                 >
                   {row.label}
                 </Typography>
@@ -115,7 +116,7 @@ export default function ProductSpecs({
               
               <Typography
                 variant="body1"
-                sx={{ flex: 1, color: 'text.primary', fontWeight: row.label !== 'Notes' ? 600 : 500, fontStyle: row.label === 'Notes' ? 'italic' : 'normal', fontSize: row.label === 'Notes' ? '14px' : '16px' }}
+                sx={{ flex: 1, color: "#2d2a26", fontWeight: row.label !== 'Notes' ? 600 : 500, fontStyle: row.label === 'Notes' ? 'italic' : 'normal', fontSize: row.label === 'Notes' ? '14px' : '16px' }}
               >
                 {row.value}
               </Typography>
@@ -125,8 +126,7 @@ export default function ProductSpecs({
           <Typography
             variant="body1"
             fontSize='16px'
-            color="text.secondary"
-            sx={{ px: 2, py: 1 }}
+            sx={{ px: 2, py: 1, color: "#2d2a26" }}
           >
             No specifications available.
           </Typography>
@@ -147,11 +147,44 @@ export default function ProductSpecs({
         }
         }}
       >
-        <Typography variant="h6" gutterBottom>
+        <Typography 
+          variant="h6" 
+          gutterBottom
+          sx={{ color: "#2d2a26" }}
+        >
           Product Description
         </Typography>
         <Box>
-          <Typography variant="body1" fontSize='16px' dangerouslySetInnerHTML={{ __html: description }}></Typography>
+          <Typography 
+            component='div' 
+            dangerouslySetInnerHTML={{ __html: descriptionHtml }} 
+            sx={{
+              color: "#2d2a26",
+              "& ul.az__hc": {
+                listStyle: "none",
+                mt: 2,
+                mb: 0,
+                mx: 0,
+                padding: 0,
+              },
+              // make each <li> align nicely with the checkmark
+              "& li.az_ca": {
+                display: "flex",
+                alignItems: "flex-start",
+                mb: 1,
+              },
+              // give a little space between the icon and the text
+              "& li.az_ca .az__a": {
+                marginRight: 1,
+                flexShrink: 0,
+              },
+              // optional: if the <div> inside your <li> is wrapping weirdly
+              "& li.az_ca > div": {
+                flex: 1,
+              },
+            }}
+          >
+          </Typography>
         </Box>  
       </Grid>
     </Grid>

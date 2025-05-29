@@ -19,18 +19,20 @@ body {
 
 @media(max-width: 664px) {
   .simplebar-scrollable-y {
-    display: none;
-  }
-}
-
-@media(min-width: 665px) {
-  .simplebar-scrollable-y {
-    display: flex;
+    width: 100dvw !important;
+    height: 100px !important;
   }
 }
 
 .simplebar-track {
   pointer-events: auto !important;
+  bottom: -9px !important;
+}
+
+@media(max-width: 664px) {
+  .simplebar-track {
+    bottom: -9px !important;
+  }
 }
 
 .simplebar-scrollbar {

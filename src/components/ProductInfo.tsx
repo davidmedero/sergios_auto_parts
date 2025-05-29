@@ -30,10 +30,11 @@ const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
         '@media (max-width: 664px)': {
           maxWidth: '100%',
           px: 2,
+          mt: 0.5
         }
       }}
     >
-      <Typography variant="h4" fontSize="20px" fontWeight="600">{title}</Typography>
+      <Typography variant="h4" fontSize="20px" fontWeight="600" sx={{ color: "#2d2a26" }}>{title}</Typography>
       {/* Part # and SKU */}
       <Box
         sx={{
@@ -55,11 +56,21 @@ const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
         <Typography component="span" fontSize='12px' sx={{ color: "#2d2a26" }}>{sku}</Typography>
       </Box>
       {price && (
-        <Typography variant="h5">
+        <Typography variant="h5" sx={{ color: "#2d2a26" }}>
           ${price.amount}
         </Typography>
       )}
-      <Button variant="contained" size="large">
+      <Button 
+        variant="contained" 
+        size="large"
+        sx={{ 
+          bgcolor: "#2d2a26",
+          color: '#fff',
+          '&:hover': {
+            bgcolor: "grey.800",
+          }
+        }}
+      >
         Add to Cart
       </Button>
     </Grid>

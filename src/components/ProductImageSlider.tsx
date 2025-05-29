@@ -932,12 +932,26 @@ const ProductImageSlider = ({
         simpleBarScrollElement.style.scrollBehavior = "";
       }, 1000);
   
-      if (
-        thumbnailTop < simpleBarScrollElement.scrollTop ||
-        thumbnailBottom > simpleBarScrollElement.scrollTop + containerHeight
-      ) {
-        simpleBarScrollElement.scrollTop =
-          thumbnailTop - containerHeight / 2 + thumbnail.offsetHeight / 2;
+      if (windowSize.width > 664) {
+        if (
+          thumbnailTop < simpleBarScrollElement.scrollTop ||
+          thumbnailBottom > simpleBarScrollElement.scrollTop + containerHeight
+        ) {
+          simpleBarScrollElement.scrollTop =
+            thumbnailTop - containerHeight / 2 + thumbnail.offsetHeight / 2;
+        }
+      } else {
+        // ─── HORIZONTAL CENTERING ─────────────────────────────
+        const cw = simpleBarScrollElement.clientWidth;
+        const left  = thumbnail.offsetLeft;
+        const right = left + thumbnail.offsetWidth;
+        const cur   = simpleBarScrollElement.scrollLeft;
+
+        // if out‐of‐view → center it
+        if (left < cur || right > cur + cw) {
+          const target = left - (cw - thumbnail.offsetWidth) / 2;
+          simpleBarScrollElement.scrollLeft = Math.max(0, target);
+        }
       }
       x.current = currentPosition
       firstCellInSlide.current = slides.current[index].cells[0]?.element;

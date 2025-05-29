@@ -31,13 +31,10 @@ const ProductPage: FC<Props> = ({ product }) => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',
-            pl: 3,
             '@media (max-width: 980px)': {
               flexDirection: 'column',
               alignItems: 'center',
-              pl: 0,
             },
-            gap: 3,
             mx: 'auto'
           }}
         >

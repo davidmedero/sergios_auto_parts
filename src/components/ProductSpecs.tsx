@@ -59,10 +59,30 @@ export default function ProductSpecs({
   }, [specs])
 
   return (
-    <Grid container spacing={4} sx={{ mt: 4, px: 3, mb: 5 }}>
+    <Grid container spacing={4} sx={{ mt: 4, px: 3, mb: 5, flexWrap: 'nowrap', justifyContent: 'center', width: '100%', '@media (max-width: 1100px)': {
+      flexDirection: 'column',
+    }, '@media (max-width: 664px)': {
+      px: 0
+    } }}>
       {/* Left: specs table */}
-      <Grid size={{ xs: 12, md: 6 }}>
-        <Typography variant="h6" gutterBottom>
+      <Grid 
+        sx={{ 
+          maxWidth: '910px',
+          width: '100%',
+          '@media (max-width: 1100px)': {
+            maxWidth: '100%'
+          } 
+        }}
+      >
+        <Typography 
+          variant="h6" 
+          gutterBottom 
+          sx={{ 
+            '@media (max-width: 664px)': {
+              px: 2
+            } 
+          }}
+        >
           Product Specifications
         </Typography>
 
@@ -70,23 +90,32 @@ export default function ProductSpecs({
           rows.map((row, i) => (
             <Stack
               key={i}
-              direction="row"
-              spacing={2}
               sx={{
                 px: 2,
-                py: 1,
-                backgroundColor: i % 2 ? 'grey.100' : 'transparent'
+                py: 2,
+                flexDirection: 'row',
+                backgroundColor: i % 2 ? 'grey.100' : 'transparent',
+                '@media (max-width: 500px)': {
+                  flexDirection: 'column',
+                  gap: 1
+                }
               }}
             >
+              <Box sx={{ width: '350px', '@media (max-width: 720px)': {
+                width: 'calc(54% - 50px)'
+              } }}>
+                <Typography
+                  variant="body1"
+                  fontSize='16px'
+                  sx={{ flex: 1, fontWeight: 500, color: 'text.primary' }}
+                >
+                  {row.label}
+                </Typography>
+              </Box>
+              
               <Typography
-                variant="body2"
-                sx={{ flex: 1, fontWeight: 500, color: 'text.primary' }}
-              >
-                {row.label}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ flex: 1, color: 'text.primary', fontWeight: row.label !== 'Notes' ? 600 : 500, fontStyle: row.label === 'Notes' ? 'italic' : 'normal' }}
+                variant="body1"
+                sx={{ flex: 1, color: 'text.primary', fontWeight: row.label !== 'Notes' ? 600 : 500, fontStyle: row.label === 'Notes' ? 'italic' : 'normal', fontSize: row.label === 'Notes' ? '14px' : '16px' }}
               >
                 {row.value}
               </Typography>
@@ -94,7 +123,8 @@ export default function ProductSpecs({
           ))
         ) : (
           <Typography
-            variant="body2"
+            variant="body1"
+            fontSize='16px'
             color="text.secondary"
             sx={{ px: 2, py: 1 }}
           >
@@ -104,12 +134,24 @@ export default function ProductSpecs({
       </Grid>
 
       {/* Right: product description (raw HTML) */}
-      <Grid size={{ xs: 12, md: 6 }}>
+      <Grid 
+        sx={{ 
+          maxWidth: '650px',
+          width: '56%',
+          '@media (max-width: 1100px)': {
+            width: '100%',
+            maxWidth: '100%',
+          },
+          '@media (max-width: 664px)': {
+          px: 2,
+        }
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           Product Description
         </Typography>
         <Box>
-          <Typography dangerouslySetInnerHTML={{ __html: description }}></Typography>
+          <Typography variant="body1" fontSize='16px' dangerouslySetInnerHTML={{ __html: description }}></Typography>
         </Box>  
       </Grid>
     </Grid>

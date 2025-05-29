@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import type { FC } from 'react';
 import type { Money } from '@/lib/types';
-import { Divider } from '@mui/material';
+import { Divider, Grid } from '@mui/material';
 
 interface Props {
   title:       string;
@@ -16,14 +16,21 @@ interface Props {
 
 const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
   return (
-    <Box
+    <Grid
+      container
       sx={{
         flex: '1 1 0',
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
-        p: 3,
-        maxWidth: 600
+        pt: 3,
+        maxWidth: 664,
+        px: 3,
+        width: '100%',
+        '@media (max-width: 664px)': {
+          maxWidth: '100%',
+          px: 2,
+        }
       }}
     >
       <Typography variant="h4" fontSize="20px" fontWeight="600">{title}</Typography>
@@ -34,7 +41,7 @@ const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
           alignItems: 'center',
           color: '#6E6E6E',
           typography: 'body2',
-          gap: 1
+          gap: 1,
         }}
       >
         <Typography component="span" fontSize='12px'>Part #</Typography>
@@ -55,7 +62,7 @@ const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
       <Button variant="contained" size="large">
         Add to Cart
       </Button>
-    </Box>
+    </Grid>
   );
 };
 

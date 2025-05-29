@@ -1380,7 +1380,9 @@ export default function ProductImages({ urls }: Props) {
           overflow: 'hidden',
           height: '506px',
           maxHeight: '506px',
-          '@media (max-width: 616px)': { height: 'calc(67vw + 6px)' }
+          pl: 3,
+          '@media (max-width: 664px)': { height: 'calc(67vw + 6px)' },
+          '@media (max-width: 980px)': { pl: 0 }
         }}
       >
         <Grid container spacing={2}>
@@ -1419,10 +1421,10 @@ export default function ProductImages({ urls }: Props) {
           </SimpleBarReact>
 
           {/* Right Column — Main Image Display */}
-          <Grid sx={{ display: 'flex', width: 'unset', '@media (max-width: 616px)': {
+          <Grid sx={{ display: 'flex', width: 'unset', '@media (max-width: 664px)': {
               width: '100%'
             } }}>
-            <Box sx={{ position: 'relative', width: '500px', overflow: 'hidden', '@media (max-width: 616px)': {
+            <Box sx={{ position: 'relative', width: '500px', overflow: 'hidden', '@media (max-width: 664px)': {
               width: '100dvw'
             } }}>
               <ProductImageSlider imageCount={urls.length} windowSize={windowSize} isClick={isClick} expandableImgRefs={expandableImgRefs} overlayDivRef={overlayDivRef} setSlideIndex={setSlideIndex} setShowFullscreenModal={setShowFullscreenModal} thumbnailRefs={thumbnailRefs} simpleBarRef={simpleBarRef} thumbnailContainerRef={thumbnailContainerRef} setFullscreenPosition={setFullscreenPosition} setShowFullscreenSlider={setShowFullscreenSlider} showFullscreenSlider={showFullscreenSlider} isWrapping={isWrapping}>
@@ -1436,7 +1438,7 @@ export default function ProductImages({ urls }: Props) {
                           position: 'absolute',
                           left: 0,
                           maxWidth: 500,
-                          '@media (max-width: 616px)': {
+                          '@media (max-width: 664px)': {
                             width: 'calc(100% / 1.5)'
                           }
                         }}

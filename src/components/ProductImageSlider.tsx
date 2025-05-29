@@ -669,7 +669,7 @@ const ProductImageSlider = ({
 
   function getSlideDistance(x: number, index: number) {
     if (!slider.current) return 1;
-    const length = (slides.current[slides.current.length - 1].target === sliderWidth.current || window.innerWidth <= 616) ? slides.current.length - 1 : slides.current.length;
+    const length = (slides.current[slides.current.length - 1].target === sliderWidth.current || window.innerWidth <= 664) ? slides.current.length - 1 : slides.current.length;
     const slideIndex = ((index % length) + length) % length;
     const finalIndex = isWrapping.current === true ? slideIndex : index;
     const slide = slides.current[finalIndex];
@@ -717,7 +717,7 @@ const ProductImageSlider = ({
       wrapSelect(index);
     }
     const containedIndex = index < 0 ? 0 : index > slides.current.length - 1 ? slides.current.length - 1 : index;
-    const length = (slides.current[slides.current.length - 1].target === sliderWidth.current || window.innerWidth <= 616) ? slides.current.length - 1 : slides.current.length;
+    const length = (slides.current[slides.current.length - 1].target === sliderWidth.current || window.innerWidth <= 664) ? slides.current.length - 1 : slides.current.length;
     index = ((index % length) + length) % length;
     const finalIndex = isWrapping.current === true ? index : containedIndex;
     selectedIndex.current = finalIndex;
@@ -802,7 +802,7 @@ const ProductImageSlider = ({
   function wrapSelect(index: number) {
     if (!slider.current) return;
 
-    const length = slides.current[slides.current.length - 1].target === sliderWidth.current || window.innerWidth <= 616 ? slides.current.length - 1 : slides.current.length;
+    const length = slides.current[slides.current.length - 1].target === sliderWidth.current || window.innerWidth <= 664 ? slides.current.length - 1 : slides.current.length;
     const slideableWidth = sliderWidth.current;
     const selectedIdx = selectedIndex.current;
 
@@ -1198,7 +1198,7 @@ const ProductImageSlider = ({
   
 
   return (
-    <Box sx={{ position: 'relative', height: imageCount > 2 ? '506px' : '500px', '@media (max-width: 616px)': { height: imageCount > 2 ? 'calc(67vw + 6px)' : '67vw' }, backgroundColor: '#f8f9fa', zIndex: 1 }}>
+    <Box sx={{ position: 'relative', height: imageCount > 2 ? '506px' : '500px', '@media (max-width: 664px)': { height: imageCount > 2 ? 'calc(67vw + 6px)' : '67vw' }, backgroundColor: '#f8f9fa', zIndex: 1 }}>
     {/* Previous Button */}
     <IconButton
       onClick={() => previous()}

@@ -908,7 +908,7 @@ const ProductImageSlider = ({
       thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
         if (img) {
           img.style.border =
-            i === index ? '2px solid #2d2a26' : '0px solid transparent';
+            (i === index) || (i === 0 && index === slides.current.length - 1) || (i === 0 && index === slides.current.length) ? '2px solid #2d2a26' : '0px solid transparent';
         }
       });
       if (!simpleBarRef.current) return;

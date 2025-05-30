@@ -28,6 +28,7 @@ const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
         px: 3,
         width: '100%',
         '@media (max-width: 664px)': {
+          flex: 'unset',
           maxWidth: '100%',
           px: 2,
           mt: 0.5
@@ -46,7 +47,7 @@ const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
         }}
       >
         <Typography component="span" fontSize='12px'>Part #</Typography>
-        <Typography component="span" fontSize='12px' sx={{ color: "#2d2a26" }}>{partNumber?.value}</Typography>
+        <Typography component="span" fontSize='12px' sx={{ color: "#2d2a26" }}>{partNumber.value}</Typography>
         <Divider
           orientation="vertical"
           flexItem

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { useState, useEffect, useRef, createRef, useLayoutEffect } from "react";
+import { useState, useEffect, useRef, createRef, useLayoutEffect, useCallback } from "react";
 import { Box } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import SimpleBarReact from 'simplebar-react';
@@ -1034,10 +1034,10 @@ export default function ProductImages({ urls }: Props) {
     return Math.max(min, Math.min(max, val));
   }
 
-  function handlePinchWheel(
+  const handlePinchWheel = useCallback((
     e: WheelEvent,
     imageRef: React.RefObject<HTMLDivElement | null>
-  ) {
+  ) => {
     e.preventDefault();
     if (!imageRef.current) return;
     if (!e.ctrlKey) return;
@@ -1062,7 +1062,8 @@ export default function ProductImages({ urls }: Props) {
       centerPoint: { x: e.clientX, y: e.clientY },
       imageRef
     });
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scale]);
 
   useLayoutEffect(() => {
     if (scale > 1.01) {
@@ -1149,13 +1150,13 @@ export default function ProductImages({ urls }: Props) {
       y.current += distance;
       positionSlider();
     } else if (windowSize.height > imageEl.clientHeight) {
-      if (topBound > 0 || offsetY < ((windowSize.height - imageEl.clientHeight) / 2) * 2) {
+      if (topBound > 0) {
         const distance = -y.current + (zoomY.current * (finalZoom - 1)) - (windowSize.height - imageEl.clientHeight) / 2;
         y.current += distance;
         positionSlider();
       }
 
-      if (bottomBound < -imageEl.clientHeight + (windowSize.height - imageEl.clientHeight) || offsetY > imageEl.clientHeight - ((windowSize.height - imageEl.clientHeight) / 2) * 2) {
+      if (bottomBound < -imageEl.clientHeight + (windowSize.height - imageEl.clientHeight)) {
         const distance = -imageEl.clientHeight + (windowSize.height - imageEl.clientHeight) - y.current + (zoomY.current * (finalZoom - 1)) - (imageEl.clientHeight * (finalZoom - 2)) - (windowSize.height - imageEl.clientHeight) / 2;
         y.current += distance;
         positionSlider();
@@ -1255,9 +1256,7 @@ export default function ProductImages({ urls }: Props) {
     if (e.touches.length !== 2) return;
     e.preventDefault();
 
-    if (scale > 1.01) {
-      isTouchPinching.current = true;
-    }
+    isTouchPinching.current = true;
     const [t0, t1] = [e.touches[0], e.touches[1]];
     startDist.current = distance(t0, t1);
     startScale.current = scale;
@@ -1325,14 +1324,14 @@ export default function ProductImages({ urls }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoomTo, onTouchStart, onTouchMove, endPinch, isTouchPinching.current]);
 
-  function highlightThumbs(index: number) {
+  const highlightThumbs = useCallback((index: number) => {
     thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
       if (img) {
         img.style.border =
           i === index ? '2px solid #2d2a26' : '0px solid transparent';
       }
     });
-  }
+  }, []);
 
   useEffect(() => {
     if (!simpleBarRef.current || !isHovering) return;

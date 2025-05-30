@@ -42,15 +42,14 @@ const Navbar: FC = () => {
         elevation={0}
         sx={{ 
           bgcolor: "#FFF",
-          "@media (max-width:768px)": {
+          "@media (max-width: 768px)": {
             width: "100%",
-          } 
+          }
         }}
       >
         <Toolbar 
           sx={{
             pl: '20px !important',
-            minHeight: 48,
             "@media (max-width:768px)": {
               p: '0px !important',
             }  
@@ -197,7 +196,10 @@ const Navbar: FC = () => {
         <Toolbar 
           sx={{ 
             minHeight: 64, 
-            pl: "24px"
+            pl: "24px",
+            "@media (max-width: 480px)": {
+              minHeight: 50,
+            } 
           }}
         >
           <Grid container alignItems="center" spacing={2} sx={{ flexWrap: "nowrap", flexGrow: 1, flexShrink: 0, justifyContent: "space-between" }}>

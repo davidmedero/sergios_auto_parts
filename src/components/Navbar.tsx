@@ -10,6 +10,7 @@ import {
   IconButton,
   Typography,
   Collapse,
+  Badge,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from '@mui/icons-material/Person';
@@ -27,13 +28,15 @@ import Cart from "./Cart";
 import { useCart } from "@/contexts/CartContext";
 
 const Navbar: FC = () => {
-  const { setCartOpen } = useCart();
+  const { lines, setCartOpen } = useCart();
   const [modalOpen, setModalOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { vehicles, currentVehicleId } = useVehicles();
   const currentVehicle = vehicles.find(v => v.id === currentVehicleId) || null;
   const router = useRouter();
+
+  const totalItems = lines.reduce((sum, line) => sum + line.quantity, 0);
 
   return (
     <>
@@ -314,7 +317,9 @@ const Navbar: FC = () => {
                   }}
                   onClick={() => setCartOpen({ right: true })}
                 >
-                  <ShoppingCartIcon />
+                  <Badge badgeContent={totalItems} color="error">
+                    <ShoppingCartIcon />
+                  </Badge>
                 </IconButton>
               </Box>
             </Grid>

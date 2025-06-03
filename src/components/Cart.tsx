@@ -1,6 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-// components/Cart.tsx
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -124,7 +121,7 @@ export default function Cart() {
                       "&:last-child": { borderBottom: 0 },
                     }}
                   >
-                    <Fade in={isVisible} timeout={300}>
+                    <Fade in={isVisible} timeout={300} style={{ width: '100%' }}>
                       <Box sx={{ display: "flex", flexDirection: "row" }}>
                         {/* Thumbnail */}
                         {line.merchandise.image && (
@@ -135,25 +132,30 @@ export default function Cart() {
                               width: "112px",
                               overflow: "hidden",
                               transition: "opacity 0.3s",
-                              "&:hover": { opacity: 0.75 },
+                              "&:hover": { opacity: 0.95 },
                               cursor: "pointer",
+                              border: '1px solid #e0e0e0',
+                              borderRadius: 1
                             }}
                           >
                             <Link
                               href={`/${line.merchandise.product.handle}`}
                               style={{ textDecoration: "none" }}
                             >
-                              <img
+                              <Box
+                                component='img'
                                 loading="lazy"
                                 src={line.merchandise.image.url}
                                 alt={
                                   line.merchandise.image.altText ||
                                   line.merchandise.title
                                 }
-                                style={{
+                                sx={{
                                   width: "100%",
                                   height: "100%",
                                   objectFit: "cover",
+                                  "&:hover": { scale: 1.2 },
+                                  transition: 'all 0.3s cubic-bezier(.4,0,.22,1)'
                                 }}
                               />
                             </Link>

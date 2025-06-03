@@ -5,6 +5,7 @@ import React, {
   ReactNode,
   useContext,
   useState,
+  useEffect,
 } from "react";
 import {
   storefront,
@@ -36,22 +37,63 @@ export function useCart(): CartContextType {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartId, setCartId] = useState<string | null>(null);
-  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
-  const [lines, setLines] = useState<CartLine[]>([]);
+  // 1) Lazy-init from localStorage, if available:
+  const [cartId, setCartId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("cartId");
+    }
+    return null;
+  });
+
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("checkoutUrl");
+    }
+    return null;
+  });
+
+  const [lines, setLines] = useState<CartLine[]>(() => {
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("cartLines");
+      if (raw) {
+        try {
+          return JSON.parse(raw);
+        } catch {
+          console.error("Failed to parse cartLines from localStorage");
+        }
+      }
+    }
+    return [];
+  });
+
   const [cartOpen, setCartOpen] = useState<{ right: boolean }>({ right: false });
 
-  // ─── ADD LINE (Optmistic, single‐call on first add) ─────────────────────────────
-  //
-  // If there is no cartId yet, we call cartCreate({ lines: [...] }) in one shot.
-  // If there is already a cartId, we call cartLinesAdd.
-  //
-  // In both cases:
-  //   1. We immediately push a “temporary line” into state so the UI moves instantly.
-  //   2. We fire off the mutation.  When Shopify returns, we replace state with the canonical data.
-  //
+  // 2) Whenever cartId, checkoutUrl, or lines change, sync to localStorage:
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (cartId === null) {
+      // No cart: remove everything
+      localStorage.removeItem("cartId");
+      localStorage.removeItem("checkoutUrl");
+      localStorage.removeItem("cartLines");
+    } else {
+      // Save current values
+      localStorage.setItem("cartId", cartId);
+      if (checkoutUrl) {
+        localStorage.setItem("checkoutUrl", checkoutUrl);
+      } else {
+        localStorage.removeItem("checkoutUrl");
+      }
+      localStorage.setItem("cartLines", JSON.stringify(lines));
+    }
+  }, [cartId, checkoutUrl, lines]);
+
+  // 3) Mutations (add, update, remove) remain largely the same,
+  //    but now state changes propagate to localStorage automatically via the useEffect above.
+
   async function addLine(variantId: string, quantity: number) {
-    // 2) If no cartId, CREATE (and ADD the line in one shot).
+    // If no cartId, CREATE (and ADD the line in one shot).
     if (!cartId) {
       try {
         const variables = {
@@ -65,12 +107,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         );
         const payload = resp.cartCreate;
         if (payload && payload.cart) {
-          // Replace our “temp line” with Shopify’s actual data:
           setCartId(payload.cart.id);
           setCheckoutUrl(payload.cart.checkoutUrl);
           setLines(payload.cart.lines.edges.map((edge) => edge.node));
         } else {
-          // If creation failed, roll back our temp line
           console.error("cartCreate errors:", payload?.userErrors);
         }
       } catch (error) {
@@ -98,15 +138,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setLines(payload.cart.lines.edges.map((edge) => edge.node));
       } else {
         console.error("cartLinesAdd errors:", payload?.userErrors);
-        // Roll back the temp line on error:
       }
     } catch (error) {
       console.error("Error calling cartLinesAdd:", error);
     }
   }
 
-  // ─── UPDATE LINE QUANTITY (Optimistic, no re‐sync on success) ──────────────────
-  //
   async function updateLine(lineId: string, quantity: number) {
     if (!cartId) {
       console.warn("No cartId; cannot update line");
@@ -130,23 +167,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       );
       const payload = resp.cartLinesUpdate;
       if (payload && payload.cart) {
-        // Update the checkoutUrl in case it changed:
         setCheckoutUrl(payload.cart.checkoutUrl);
-        // We do NOT re‐set the entire lines array here (that causes flicker).
-        // We trust our optimistic quantity.  Only if you detect a mismatch,
-        // you could re‐sync by calling setLines(...) with payload.cart.lines.
       } else {
         console.error("cartLinesUpdate errors:", payload?.userErrors);
-        // (Optional) Roll back to the old quantity if you store it first.
       }
     } catch (error) {
       console.error("Error calling cartLinesUpdate:", error);
-      // (Optional) Roll back local state here if you captured the old value.
     }
   }
 
-  // ─── REMOVE LINE (Optimistic) ─────────────────────────────────────────────────
-  //
   async function removeLine(lineId: string) {
     if (!cartId) {
       console.warn("No cartId; cannot remove line");
@@ -170,15 +199,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const payload = resp.cartLinesRemove;
       if (payload && payload.cart) {
         setCheckoutUrl(payload.cart.checkoutUrl);
-        // No need to re‐set lines(...) again; we trust our optimistic removal
       } else {
         console.error("cartLinesRemove errors:", payload?.userErrors);
-        // Roll back if removal failed:
         setLines(oldLines);
       }
     } catch (error) {
       console.error("Error calling cartLinesRemove:", error);
-      // Roll back on network / server error:
       setLines(oldLines);
     }
   }

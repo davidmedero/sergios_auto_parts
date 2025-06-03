@@ -88,6 +88,15 @@ const Navbar: FC = () => {
                   },
                   "&:hover": {
                     bgcolor: "rgba(21, 101, 192, 0.1)"
+                  },
+                  "&:focus": {
+                    bgcolor: "transparent",
+                  },
+                  "&:active": {
+                    bgcolor: "transparent",
+                  },
+                  "&.Mui-focusVisible": {
+                    bgcolor: "transparent",
                   }
                 }}
               >
@@ -239,6 +248,15 @@ const Navbar: FC = () => {
                       boxSizing: "border-box",
                       "&:hover": {
                         bgcolor: "rgba(21, 101, 192, 0.1)"
+                      },
+                      "&:focus": {
+                        bgcolor: "transparent",
+                      },
+                      "&:active": {
+                        bgcolor: "transparent",
+                      },
+                      "&.Mui-focusVisible": {
+                        bgcolor: "transparent",
                       },
                       "@media (max-width:480px)": {
                         bgcolor: 'transparent',

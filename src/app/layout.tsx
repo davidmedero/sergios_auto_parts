@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 import { CartProvider } from '../contexts/CartContext';
 
 const roboto = Roboto({
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-roboto",
 });

@@ -902,7 +902,7 @@ const ProductImageSlider = ({
       
       setTranslateX(currentPosition);
   
-      const index = Math.round(Math.abs(currentPosition) / (sliderWidth.current / slides.current.length));
+      let index = Math.round(Math.abs(currentPosition) / (sliderWidth.current / slides.current.length));
       selectedIndex.current = index;
       
       thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
@@ -953,7 +953,8 @@ const ProductImageSlider = ({
           simpleBarScrollElement.scrollLeft = Math.max(0, target);
         }
       }
-      x.current = currentPosition
+      x.current = currentPosition;
+      index = ((index % slides.current.length) + slides.current.length) % slides.current.length;
       firstCellInSlide.current = slides.current[index].cells[0]?.element;
       return () => clearTimeout(timeout);
     } else {

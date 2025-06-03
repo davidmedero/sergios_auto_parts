@@ -41,19 +41,12 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
 
   if (!menuData) return null;
 
-  // iOS detection to disable swipe issues
-  const iOS =
-    typeof navigator !== 'undefined' &&
-    /iPad|iPhone|iPod/.test(navigator.userAgent);
-
   return (
     <SwipeableDrawer
       anchor="left"
       open={open}
       onOpen={onOpen}
       onClose={onClose}
-      disableBackdropTransition={!iOS}
-      disableDiscovery={iOS}
     >
       <Box sx={{ width: 376 }}>
         {/* Header */}
@@ -79,7 +72,7 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
                   primary={cat.name}
                   sx={{ 
                     "& .MuiTypography-root": {
-                      fontWeight: cat.children.length > 0 && openCat[cat.id] ? 600 : 500,     
+                      fontWeight: cat.children.length > 0 && openCat[cat.id] ? 600 : 400,     
                     } 
                   }} 
                 />
@@ -120,7 +113,6 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
                                 }}
                               >
                                 <ListItemButton
-                                  component="a"
                                   sx={{ pl: 8 }}
                                   onClick={onClose}
                                 >

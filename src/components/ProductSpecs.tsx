@@ -108,7 +108,7 @@ export default function ProductSpecs({
                 <Typography
                   variant="body1"
                   fontSize='16px'
-                  sx={{ flex: 1, fontWeight: 500, color: "#2d2a26" }}
+                  sx={{ flex: 1, fontWeight: 400, color: "#2d2a26" }}
                 >
                   {row.label}
                 </Typography>
@@ -116,7 +116,7 @@ export default function ProductSpecs({
               
               <Typography
                 variant="body1"
-                sx={{ flex: 1, color: "#2d2a26", fontWeight: row.label !== 'Notes' ? 600 : 500, fontStyle: row.label === 'Notes' ? 'italic' : 'normal', fontSize: row.label === 'Notes' ? '14px' : '16px' }}
+                sx={{ flex: 1, color: "#2d2a26", fontWeight: row.label !== 'Notes' ? 600 : 400, fontStyle: row.label === 'Notes' ? 'italic' : 'normal', fontSize: row.label === 'Notes' ? '14px' : '16px' }}
               >
                 {row.value}
               </Typography>

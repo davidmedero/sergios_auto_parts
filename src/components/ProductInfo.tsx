@@ -3,18 +3,35 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import type { FC } from 'react';
-import type { Money } from '@/lib/types';
+import { useState, type FC } from 'react';
 import { Divider, Grid } from '@mui/material';
+import NumberFieldForProductInfoPage from "./NumberField";
+import { useCart } from "@/contexts/CartContext";
 
 interface Props {
-  title:       string;
-  price?:      Money;
+  id: string;
+  title: string;
+  handle: string;
+  image: string;
+  price: string;
   sku: string;
   partNumber: { value: string };
 }
 
-const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
+const ProductInfo: FC<Props> = ({ id, title, price, sku, partNumber }) => {
+  const { addLine, setCartOpen } = useCart();
+
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const handleChange = (value: number | null) => {
+    if (value === null || value < 1 || value > 10) return;
+    setQuantity(value);
+  };
+
+  const addToCart = async () => {
+    await addLine(id, quantity);
+  };
+  
   return (
     <Grid
       container
@@ -58,13 +75,19 @@ const ProductInfo: FC<Props> = ({ title, price, sku, partNumber }) => {
       </Box>
       {price && (
         <Typography variant="h5" sx={{ color: "#2d2a26" }}>
-          ${price.amount}
+          ${price}
         </Typography>
       )}
+      <NumberFieldForProductInfoPage value={quantity} handleChange={handleChange} />
       <Button 
+        onClick={() => {
+          addToCart();
+          setCartOpen({ right: true });
+        }}
         variant="contained" 
         size="large"
         sx={{ 
+          mt: 1,
           bgcolor: "#2d2a26",
           color: '#fff',
           '&:hover': {

@@ -24,11 +24,12 @@ import { FaCar } from "react-icons/fa";
 import ProductSearch from "./ProductSearch";
 import Menu from "./Menu";
 import Cart from "./Cart";
+import { useCart } from "@/contexts/CartContext";
 
 const Navbar: FC = () => {
+  const { setCartOpen } = useCart();
   const [modalOpen, setModalOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { vehicles, currentVehicleId } = useVehicles();
   const currentVehicle = vehicles.find(v => v.id === currentVehicleId) || null;
@@ -311,7 +312,7 @@ const Navbar: FC = () => {
                   sx={{ 
                     color: "#2d2a26" 
                   }}
-                  onClick={() => setCartOpen(true)}
+                  onClick={() => setCartOpen({ right: true })}
                 >
                   <ShoppingCartIcon />
                 </IconButton>
@@ -348,11 +349,7 @@ const Navbar: FC = () => {
         onClose={() => setDrawerOpen(false)}
       />
       {/* Cart Swipeable Drawer */}
-      <Cart
-        open={cartOpen}
-        onOpen={() => setCartOpen(true)}
-        onClose={() => setCartOpen(false)}
-      />
+      <Cart />
     </>
   );
 };

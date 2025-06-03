@@ -750,7 +750,7 @@ const ProductImageSlider = ({
       simpleBarScrollElement.style.scrollBehavior = "";
     }, 1000);
 
-    if (windowSize.width > 664) {
+    if (window.innerWidth > 664) {
       if (
         thumbnailTop < simpleBarScrollElement.scrollTop ||
         thumbnailBottom > simpleBarScrollElement.scrollTop + containerHeight
@@ -932,7 +932,7 @@ const ProductImageSlider = ({
         simpleBarScrollElement.style.scrollBehavior = "";
       }, 1000);
   
-      if (windowSize.width > 664) {
+      if (window.innerWidth > 664) {
         if (
           thumbnailTop < simpleBarScrollElement.scrollTop ||
           thumbnailBottom > simpleBarScrollElement.scrollTop + containerHeight

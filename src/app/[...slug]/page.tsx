@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import { storefront } from '@/lib/shopify';
 import { getCategoryTree, type CatNode } from '@/lib/categories';
 import type { ProductByHandleQuery } from '@/lib/types';
-
 import ProductPage      from '@/components/ProductPage';
 import CategoryPage     from '@/components/CategoryPage';
 import ProductListPage  from '@/components/ProductListPage';
@@ -15,8 +14,17 @@ const PRODUCT_QUERY = `
     productByHandle(handle: $handle) {
       id
       title
+      handle
       descriptionHtml
-
+      images(first: 1) {
+        edges {
+          node {
+            url
+            altText
+            id
+          }
+        }
+      }
       imagesJson: metafield(namespace: "custom", key: "images") {
         references(first: 10) {
           nodes {
@@ -41,6 +49,7 @@ const PRODUCT_QUERY = `
       variants(first: 1) {
         edges {
           node {
+            id
             price { amount currencyCode }
             sku
           }

@@ -116,7 +116,7 @@ export default function ProductCard({ product }: Props) {
               px: 2,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between",
+              justifyContent: current ? "space-between" : "flex-start",
               width: "310px",
               gap: 1
             }}

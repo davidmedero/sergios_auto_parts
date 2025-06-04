@@ -96,6 +96,7 @@ const COLLECTION_PRODUCTS_QUERY = `
             variants(first: 1) {
               edges {
                 node {
+                  id
                   sku
                   price {
                     amount
@@ -185,8 +186,9 @@ export default async function CatchAllPage({ params }: any) {
             title: string;
             images: { edges: Array<{ node: { url: string; altText: string | null; width: number; height: number } }> };
             partNumber: { value: string };
-            variants: { edges: Array<{ node: { sku: string, price: { amount: string; currencyCode: string } } }> };
+            variants: { edges: Array<{ node: { id: string, sku: string, price: { amount: string; currencyCode: string } } }> };
             notes: { value: string };
+            variantId: string;
           };
         }>;
       };
@@ -213,7 +215,8 @@ export default async function CatchAllPage({ params }: any) {
       amount:       p.variants.edges[0]?.node.price.amount  ?? '0.00',
       currencyCode: p.variants.edges[0]?.node.price.currencyCode,
     },
-    notes: p.notes.value
+    notes: p.notes.value,
+    variantId: p.variants.edges[0]?.node.id
   }));
 
   const title    = node!.name;

@@ -87,9 +87,16 @@ const COLLECTION_PRODUCTS_QUERY = `
                 }
               }
             }
+            partNumber: metafield(namespace: "custom", key: "part_number") {
+              value
+            }
+            notes: metafield(namespace: "custom", key: "notes") {
+              value
+            }
             variants(first: 1) {
               edges {
                 node {
+                  sku
                   price {
                     amount
                     currencyCode
@@ -177,7 +184,9 @@ export default async function CatchAllPage({ params }: any) {
             handle: string;
             title: string;
             images: { edges: Array<{ node: { url: string; altText: string | null; width: number; height: number } }> };
-            variants: { edges: Array<{ node: { price: { amount: string; currencyCode: string } } }> };
+            partNumber: { value: string };
+            variants: { edges: Array<{ node: { sku: string, price: { amount: string; currencyCode: string } } }> };
+            notes: { value: string };
           };
         }>;
       };
@@ -198,10 +207,13 @@ export default async function CatchAllPage({ params }: any) {
     title:    p.title,
     imageUrl: p.images.edges[0]?.node.url ?? '',
     altText:  p.images.edges[0]?.node.altText  ?? '',
+    partNumber: p.partNumber.value,
+    sku: p.variants.edges[0]?.node.sku,
     price: {
       amount:       p.variants.edges[0]?.node.price.amount  ?? '0.00',
       currencyCode: p.variants.edges[0]?.node.price.currencyCode,
     },
+    notes: p.notes.value
   }));
 
   const title    = node!.name;

@@ -77,6 +77,7 @@ const COLLECTION_PRODUCTS_QUERY = `
             id
             handle
             title
+            createdAt
             images(first: 1) {
               edges {
                 node {
@@ -91,6 +92,9 @@ const COLLECTION_PRODUCTS_QUERY = `
               value
             }
             notes: metafield(namespace: "custom", key: "notes") {
+              value
+            }
+            brand: metafield(namespace: "custom", key: "brand") {
               value
             }
             variants(first: 1) {
@@ -189,6 +193,8 @@ export default async function CatchAllPage({ params }: any) {
             variants: { edges: Array<{ node: { id: string, sku: string, price: { amount: string; currencyCode: string } } }> };
             notes: { value: string };
             variantId: string;
+            brand: { value: string };
+            createdAt: string;
           };
         }>;
       };
@@ -216,7 +222,9 @@ export default async function CatchAllPage({ params }: any) {
       currencyCode: p.variants.edges[0]?.node.price.currencyCode,
     },
     notes: p.notes.value,
-    variantId: p.variants.edges[0]?.node.id
+    variantId: p.variants.edges[0]?.node.id,
+    brand: p.brand.value,
+    createdAt: p.createdAt
   }));
 
   const title    = node!.name;

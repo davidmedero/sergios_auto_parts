@@ -28,6 +28,8 @@ export interface Product {
   sku:         string;
   notes:       string;
   variantId: string;
+  brand: string;
+  createdAt:   string;
 }
 
 interface Props {
@@ -116,7 +118,7 @@ export default function ProductCard({ product }: Props) {
               px: 2,
               display: "flex",
               flexDirection: "column",
-              justifyContent: current ? "space-between" : "flex-start",
+              justifyContent: "flex-start",
               width: "310px",
               gap: 1
             }}
@@ -178,13 +180,14 @@ export default function ProductCard({ product }: Props) {
                   py: 1,
                   px: 2,
                   bgcolor: "rgb(243, 248, 243)",
-                  borderRadius: 0.5,
+                  borderTopLeftRadius: '6px',
+                  borderTopRightRadius: '6px',
                   width: "100%",
-                  flexGrow: 1,
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
                   flexWrap: "nowrap",
+                  borderBottom: '2px solid rgb(30, 116, 0)'
                 }}
               >
                 <Box

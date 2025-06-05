@@ -9,8 +9,12 @@ import React, {
 } from "react";
 
 export interface Vehicle {
-  id: string;
-  label: string;
+  id:               string;
+  label:            string;
+  year:             string;
+  make_name:        string;
+  model_name:       string;
+  engine_base_name: string;
 }
 
 interface VehiclesContextValue {

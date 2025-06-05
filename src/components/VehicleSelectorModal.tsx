@@ -124,20 +124,26 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
 
   const { vehicles, currentVehicleId, addVehicle, setCurrentVehicle, setCurrentVehicleId } = useVehicles();
 
-  // Currently shopping
+  // Currently shopping for
   const current = vehicles.find(v => v.id === currentVehicleId) ?? null;
   const saved = vehicles.filter(v => v.id !== currentVehicleId);
 
-  // confirm selection and add to context
   const handleConfirm = () => {
+    // Build a human‐readable label
     const label = tabIndex === 0
-      ? `${year} ${make?.label ?? ''} ${model ?? ''} ${engine ?? ''}`.trim()
+      ? `${year} ${make?.label ?? ""} ${model ?? ""} ${engine ?? ""}`.trim()
       : "";
 
+    // Create a Vehicle object that includes all four parts
     const newVehicle: Vehicle = {
       id: crypto.randomUUID(),
       label,
+      year: year?.toString() ?? "",
+      make_name:        make?.label ?? "",
+      model_name:       model ?? "",
+      engine_base_name: engine ?? ""
     };
+
     addVehicle(newVehicle);
     onClose();
   };
@@ -229,6 +235,10 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
       const newVehicle: Vehicle = {
         id: crypto.randomUUID(),
         label,
+        year: year?.toString() ?? "",
+        make_name:        make?.label ?? "",
+        model_name:       model ?? "",
+        engine_base_name: engine ?? ""
       };
 
       addVehicle(newVehicle);
@@ -253,6 +263,10 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
       const newVehicle: Vehicle = {
         id: crypto.randomUUID(),
         label,
+        year: year?.toString() ?? "",
+        make_name:        make?.label ?? "",
+        model_name:       model ?? "",
+        engine_base_name: engine ?? ""
       };
 
       addVehicle(newVehicle)

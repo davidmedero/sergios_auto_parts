@@ -14,7 +14,7 @@ export default function Footer() {
       }}
     >
       <Typography variant="body2">
-        © {new Date().getFullYear()} Sergios Auto Parts. All rights reserved.
+        © {new Date().getFullYear()} EZ Parts. All rights reserved.
       </Typography>
     </Box>
   );

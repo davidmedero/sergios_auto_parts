@@ -101,7 +101,7 @@ const Navbar: FC = () => {
                 }}
               >
                 <Typography variant="h1" fontSize={24} fontWeight={500} color="#2d2a26">
-                  Sergios Auto Parts
+                  EZ Parts
                 </Typography>
               </Button>
 

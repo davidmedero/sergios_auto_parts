@@ -10,9 +10,9 @@ export async function GET(request: Request) {
   const makeName = searchParams.get("make_name");
   const modelName = searchParams.get("model_name");
   const year = searchParams.get("year");
-  const engineBase = searchParams.get("engine_base_name");
+  // const engineBase = searchParams.get("engine_base_name");
 
-  if (!makeName || !modelName || !year || !engineBase) {
+  if (!makeName || !modelName || !year) {
     return NextResponse.json(
       { error: "make_name, model_name, year, engine_base_name are all required" },
       { status: 400 }
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
   remoteUrl.searchParams.set("make_name", makeName);
   remoteUrl.searchParams.set("model_name", modelName);
   remoteUrl.searchParams.set("year", year);
-  remoteUrl.searchParams.set("engine_base_name", engineBase);
+  // remoteUrl.searchParams.set("engine_base_name", engineBase);
 
   try {
     const res = await fetch(remoteUrl.toString(), {

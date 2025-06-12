@@ -84,7 +84,7 @@ export default function ProductListPage({
       return;
     }
 
-    const { make_name, model_name, year, engine_base_name } = currentVehicle;
+    const { make_name, model_name, year } = currentVehicle;
 
     async function fetchFitments() {
       setLoadingFitments(true);
@@ -93,9 +93,10 @@ export default function ProductListPage({
           make_name,
           model_name,
           year,
-          engine_base_name,
+          // engine_base_name,
         });
         const res = await fetch(`/api/fitments?${params.toString()}`);
+        console.log('res', res)
         if (!res.ok) {
           console.error(`Fitments API returned ${res.status}`);
           setFitPartNumbers([]);
@@ -103,6 +104,7 @@ export default function ProductListPage({
           return;
         }
         const data: { partNumbers: string[] } = await res.json();
+        console.log('data', data)
         setFitPartNumbers(data.partNumbers);
       } catch (err) {
         console.error("Error fetching fitments:", err);

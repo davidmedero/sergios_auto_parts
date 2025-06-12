@@ -16,7 +16,6 @@ import {
   Button
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import fetchJsonp from 'fetch-jsonp';
 import { useVehicles, Vehicle } from '@/contexts/VehiclesContext';
 import { useRouter } from 'next/navigation';
 import CurrentlyShoppingForCard from './CurrentlyShoppingForCard';
@@ -29,17 +28,6 @@ interface VehicleSelectorModalProps {
 }
 interface MakeOption { label: string; popular?: boolean; }
 interface StateOption { code: string; name: string; }
-
-// CarQuery API response types
-interface CarQueryMakeResponse {
-  Makes: Array<{ make_display: string }>;
-}
-interface CarQueryModelResponse {
-  Models: Array<{ model_name: string }>;
-}
-interface CarQueryTrimResponse {
-  Trims: Array<{ model_trim: string }>;
-}
 
 // ----- State Options -----
 const stateOptions: StateOption[] = [
@@ -98,27 +86,17 @@ const stateOptions: StateOption[] = [
 // ----- Component -----
 const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
-  const [year, setYear] = useState<number | null>(null);
+  const [year, setYear] = useState<string | null>(null);
   const [make, setMake] = useState<MakeOption | null>(null);
   const [model, setModel] = useState<string | null>(null);
   const [engine, setEngine] = useState<string | null>(null);
   const [licensePlate, setLicensePlate] = useState<string>('');
   const [vin, setVin] = useState<string>('');
   const [selectedState, setSelectedState] = useState<StateOption | null>(null);
-  
+  const [yearOptions, setYearOptions] = useState<string[]>([]);
   const [makeOptions, setMakeOptions] = useState<MakeOption[]>([]);
   const [modelOptions, setModelOptions] = useState<string[]>([]);
   const [engineOptions, setEngineOptions] = useState<string[]>([]);
-
-  // Constants for CarQuery supported years
-  const MIN_YEAR = 1980;
-  const MAX_YEAR = 2022;
-
-  // Generate year list according to API limits
-  const yearOptions = Array.from(
-    { length: MAX_YEAR - MIN_YEAR + 1 },
-    (_, i) => MAX_YEAR - i
-  );
 
   const router = useRouter();
 
@@ -165,51 +143,44 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
     }
   }, [open]);
 
+  // Years
   useEffect(() => {
-    fetchJsonp(
-      `https://www.carqueryapi.com/api/0.3/?cmd=getMakes&year=${year}&callback=callback`,
-      { jsonpCallback: 'callback' }
-    )
-      .then(res => res.json() as Promise<CarQueryMakeResponse>)
-      .then(data => {
-        const makes = data.Makes.map(m => ({ label: m.make_display }));
-        setMakeOptions(makes);
-      });
+    fetch('/api/years')
+      .then(res => res.json() as Promise<{ years: string[] }>)
+      .then(({ years }) =>
+        setYearOptions(
+          years
+        )
+      );
+  }, []);
+
+  // Makes
+  useEffect(() => {
+    if (!year) return setMakeOptions([]);
+    fetch(`/api/makes?year=${year}`)
+      .then(res => res.json() as Promise<{ makes: string[] }>)
+      .then(({ makes }) =>
+        setMakeOptions(makes.map(label => ({ label })))
+      );
   }, [year]);
 
-  // Fetch models
+  // Models
   useEffect(() => {
-    if (!make) {
-      setModelOptions([]);
-      return;
-    }
-    fetchJsonp(
-      `https://www.carqueryapi.com/api/0.3/?cmd=getModels&make=${make.label}&year=${year}&callback=callback`,
-      { jsonpCallback: 'callback' }
-    )
-      .then(res => res.json() as Promise<CarQueryModelResponse>)
-      .then(data => {
-        const models = data.Models.map(m => m.model_name);
-        setModelOptions(models);
-      });
-  }, [make, year]);
+    if (!year || !make) return setModelOptions([]);
+    fetch(`/api/models?year=${year}&make_name=${make.label}`)
+      .then(res => res.json() as Promise<{ models: string[] }>)
+      .then(({ models }) => setModelOptions(models));
+  }, [year, make]);
 
-  // Fetch trims
+  // Engines
   useEffect(() => {
-    if (!make || !model) {
-      setEngineOptions([]);
-      return;
-    }
-    fetchJsonp(
-      `https://www.carqueryapi.com/api/0.3/?cmd=getTrims&make=${make.label}&model=${model}&year=${year}&callback=callback`,
-      { jsonpCallback: 'callback' }
+    if (!year || !make || !model) return setEngineOptions([]);
+    fetch(
+      `/api/engines?year=${year}&make_name=${make.label}&model_name=${encodeURIComponent(model)}`
     )
-      .then(res => res.json() as Promise<CarQueryTrimResponse>)
-      .then(data => {
-        const trims = data.Trims.map(t => t.model_trim);
-        setEngineOptions(Array.from(new Set(trims)));
-      });
-  }, [make, model, year]);
+      .then(res => res.json() as Promise<{ engines: string[] }>)
+      .then(({ engines }) => setEngineOptions(Array.from(new Set(engines))));
+  }, [year, make, model]);
 
   useEffect(() => {
     if (engine && engine.length > 0) {
@@ -355,7 +326,7 @@ const VehicleSelectorModal: FC<VehicleSelectorModalProps> = ({ open, onClose }) 
           <Box sx={{ mt: 2 }}>
             <Grid container spacing={2} alignItems="center">
               <Grid size={{ xs: 12, md: 3 }}>
-                <Autocomplete<number, false, false, false>
+                <Autocomplete<string, false, false, false>
                   options={yearOptions}
                   value={year}
                   onChange={(_, v) => {

@@ -106,6 +106,7 @@ export default function Menu({ open, onOpen, onClose }: MenuProps) {
                               <Link 
                                 key={child.id}
                                 href={href}
+                                prefetch
                                 passHref
                                 style={{ 
                                   color: 'inherit',

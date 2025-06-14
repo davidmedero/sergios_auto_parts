@@ -1,6 +1,8 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -12,10 +14,10 @@ import type { CatNode } from '@/lib/categories';
 
 interface Props {
   title:    string;
-  segments: string[];   // for breadcrumbs
-  names:    string[];   // human-readable names for each segment
-  items:    CatNode[];  // child categories to display
-  basePath: string;     // e.g. "" or "/batteries"
+  segments: string[];
+  names:    string[];
+  items:    CatNode[];
+  basePath: string;
 }
 
 export default function CategoryPage({
@@ -25,46 +27,48 @@ export default function CategoryPage({
   items,
   basePath,
 }: Props) {
+  const router = useRouter();
+
   return (
     <Box sx={{ p: 3 }}>
-      {/* 1) Breadcrumbs in top-left */}
       <BreadcrumbsNav segments={segments} names={names} />
 
-      {/* 2) Page title */}
       <Typography variant="h4" gutterBottom>
         {title}
       </Typography>
 
-      {/* 3) Grid of child categories */}
       <Grid container spacing={2}>
-        {items.map(item => (
-          <Grid key={item.id} size={{ xs: 6, sm: 4, md: 3 }}>
-            <Card>
-              <CardActionArea
-                component={Link}
-                href={`${basePath}/${item.handle}`}
-              >
-                <CardContent
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: 120,
-                  }}
-                >
-                  {/* If you ever add images to categories, you can drop an <Image> here */}
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    noWrap
+        {items.map(item => {
+          const href = `${basePath}/${item.handle}`;
+
+          return (
+            <Grid key={item.id} size={{ xs: 6, sm: 4, md: 3 }}>
+              {/* Link with prefetch wraps the whole card */}
+              <Link href={href} prefetch>
+                <Card>
+                  <CardActionArea
+                    // also prefetch on hover
+                    onMouseEnter={() => router.prefetch(href)}
+                    component="div"
                   >
-                    {item.name}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
+                    <CardContent
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: 120,
+                      }}
+                    >
+                      <Typography variant="subtitle1" align="center" noWrap>
+                        {item.name}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Link>
+            </Grid>
+          );
+        })}
       </Grid>
     </Box>
   );

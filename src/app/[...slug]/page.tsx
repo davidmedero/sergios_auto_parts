@@ -6,7 +6,8 @@ import ProductPage      from '@/components/ProductPage';
 import CategoryPage     from '@/components/CategoryPage';
 import ProductListPage  from '@/components/ProductListPage';
 
-export const revalidate = 60;
+export const dynamic = 'force-static'
+export const revalidate = false
 
 // 1) Single‐product query
 const PRODUCT_QUERY = `

@@ -103,7 +103,6 @@ export default function ProductListPage({
           return;
         }
         const data: { part_numbers: string[] } = await res.json();
-        console.log('data', data)
         setFitPartNumbers(data.part_numbers);
       } catch (err) {
         console.error("Error fetching fitments:", err);
@@ -115,10 +114,6 @@ export default function ProductListPage({
 
     fetchFitments();
   }, [currentVehicle]);
-
-  useEffect(() => {
-    console.log('fitPartNumbers', fitPartNumbers)
-  }, [fitPartNumbers])
 
   // ─── 5) APPLY FITMENT FILTER + BRAND + SORT LOGIC ──────────────────────────────
   const filteredList = useMemo(() => {
@@ -135,7 +130,6 @@ export default function ProductListPage({
     } else {
       // 5c) Vehicle is selected: filter by fitPartNumbers
       if (!fitPartNumbers) {
-        console.log('fitPartNumbers', fitPartNumbers)
         // Still waiting for fitPartNumbers (this case is handled by loadingFitments above)
         return [];
       }

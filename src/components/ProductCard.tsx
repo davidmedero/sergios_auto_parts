@@ -1,21 +1,22 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useCallback } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { Divider, Grid } from "@mui/material";
-import { FaCar } from "react-icons/fa";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import { Divider, Grid } from '@mui/material';
+import { FaCar } from 'react-icons/fa';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import { Money } from "@/lib/types";
-import { useVehicles } from "@/contexts/VehiclesContext";
-import { useCart } from "@/contexts/CartContext";
-import VehicleSelectorModal from "./VehicleSelectorModal";
+import { Money } from '@/lib/types';
+import { useVehicles } from '@/contexts/VehiclesContext';
+import { useCart } from '@/contexts/CartContext';
+import VehicleSelectorModal from './VehicleSelectorModal';
 
 export interface Product {
   id:          string;
@@ -27,8 +28,8 @@ export interface Product {
   partNumber:  string;
   sku:         string;
   notes:       string;
-  variantId: string;
-  brand: string;
+  variantId:   string;
+  brand:       string;
   createdAt:   string;
 }
 
@@ -42,171 +43,97 @@ export default function ProductCard({ product }: Props) {
 
   const { vehicles, currentVehicleId } = useVehicles();
   const { addLine, setCartOpen } = useCart();
+  const router = useRouter();
 
-  // See if there’s a “current” vehicle selected in context:
-  const current = vehicles.find((v) => v.id === currentVehicleId) ?? null;
+  // current vehicle
+  const current = vehicles.find(v => v.id === currentVehicleId) ?? null;
 
-  const addToCart = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    // Prevent the Card’s Link from firing:
+  // Add to cart handler
+  const addToCart = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     e.preventDefault();
-
-    // Open the cart drawer
     setCartOpen({ right: true });
-
     await addLine(product.variantId, 1);
-  };
+  }, [addLine, product.variantId, setCartOpen]);
 
-  const openVehicleModal = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    // Prevent the Card’s Link from firing:
+  // Open vehicle modal
+  const openVehicleModal = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     e.preventDefault();
-
     setModalOpen(true);
-  };
+  }, []);
+
+  // Prefetch on hover
+  const handleMouseEnter = useCallback(() => {
+    router.prefetch(`/${product.handle}`);
+  }, [product.handle, router]);
 
   return (
     <>
-      {/* ───── Entire Card is a Link to /{product.handle} ───── */}
-      <Card
-        component={Link}
-        href={`/${product.handle}`}
-        sx={{
-          display: "flex",
-          boxShadow: 1,
-          borderRadius: 1,
-          overflow: "hidden",
-          py: 2,
-          pl: 2,
-          textDecoration: "none", 
-          // ensure link styling doesn’t change typography color
-          "&:hover": {
-            boxShadow: 3,
-          },
-          '@media (max-width: 600px)': {
-            flexDirection: 'column',
-            gap: 2,
-            pl: 0
-          }
-        }}
-      >
-        {/* ───── Left: Image Thumbnail ───── */}
-        <CardMedia
-          component="img"
-          image={product.imageUrl}
-          alt={product.altText}
+      <Link href={`/${product.handle}`} prefetch onMouseEnter={handleMouseEnter} style={{ textDecoration: 'none' }}>
+        <Card
           sx={{
-            width: 180,
-            height: 180,
-            objectFit: "cover",
-            flexShrink: 0,
+            display: "flex",
+            boxShadow: 1,
+            borderRadius: 1,
+            overflow: "hidden",
+            py: 2,
+            pl: 2,
+            "&:hover": { boxShadow: 3 },
             '@media (max-width: 600px)': {
-              mx: 'auto'
+              flexDirection: 'column',
+              gap: 2,
+              pl: 0
             }
           }}
-        />
-
-        <Grid container sx={{ width: "100%", flexGrow: 1 }}>
-          {/* ───── Center: Product Details ───── */}
-          <Box
+        >
+          {/* Image */}
+          <CardMedia
+            component="img"
+            image={product.imageUrl}
+            alt={product.altText}
             sx={{
-              flexGrow: 1,
-              px: 2,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              width: "310px",
-              gap: 1
+              width: 180,
+              height: 180,
+              objectFit: "cover",
+              flexShrink: 0,
+              '@media (max-width: 600px)': { mx: 'auto' }
             }}
-          >
-            {/* Title (clicking here also follows Link) */}
-            <Typography
-              fontSize={18}
-              fontWeight={500}
-            >
-              {product.title}
-            </Typography>
+          />
 
-            {/* Part # and SKU */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                color: "#6E6E6E",
-                typography: "body2",
-                gap: 1,
-              }}
-            >
-              <Typography component="span" fontSize="12px">
-                Part #
-              </Typography>
-              <Typography
-                component="span"
-                fontSize="12px"
-                sx={{ color: "#2d2a26" }}
-              >
-                {product.partNumber}
+          <Grid container sx={{ width: "100%", flexGrow: 1 }}>
+            {/* Details */}
+            <Box sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column", justifyContent: "flex-start", width: 310, gap: 1 }}>
+              <Typography fontSize={18} fontWeight={500}>
+                {product.title}
               </Typography>
 
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{ bgcolor: "#A9AAA8", height: 18, mx: 1 }}
-              />
+              <Box sx={{ display: "flex", alignItems: "center", color: "#6E6E6E", typography: "body2", gap: 1 }}>
+                <Typography component="span" fontSize="12px">Part #</Typography>
+                <Typography component="span" fontSize="12px" sx={{ color: "#2d2a26" }}>{product.partNumber}</Typography>
+                <Divider orientation="vertical" flexItem sx={{ bgcolor: "#A9AAA8", height: 18, mx: 1 }}/>
+                <Typography component="span" fontSize="12px">SKU #</Typography>
+                <Typography component="span" fontSize="12px" sx={{ color: "#2d2a26" }}>{product.sku}</Typography>
+              </Box>
 
-              <Typography component="span" fontSize="12px">
-                SKU #
-              </Typography>
-              <Typography
-                component="span"
-                fontSize="12px"
-                sx={{ color: "#2d2a26" }}
-              >
-                {product.sku}
-              </Typography>
-            </Box>
-
-            {/* “Fits a <vehicle>” section (clicking here opens the modal) */}
-            {current ? (
-              <Grid
-                onClick={openVehicleModal}
-                container
-                sx={{
-                  mt: 1,
-                  py: 1,
-                  px: 2,
-                  bgcolor: "rgb(243, 248, 243)",
-                  borderTopLeftRadius: '6px',
-                  borderTopRightRadius: '6px',
-                  width: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  flexWrap: "nowrap",
-                  borderBottom: '2px solid rgb(30, 116, 0)'
-                }}
-              >
-                <Box
+              {current && (
+                <Grid
+                  onClick={openVehicleModal}
+                  container
                   sx={{
-                    borderRadius: 1,
-                    display: "flex",
+                    mt: 1, py: 1, px: 2,
+                    bgcolor: "rgb(243, 248, 243)",
+                    borderTopLeftRadius: 1,
+                    borderTopRightRadius: 1,
+                    width: "100%",
                     alignItems: "center",
-                    textAlign: "left",
-                    bgcolor: "transparent",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    borderBottom: '2px solid rgb(30, 116, 0)'
                   }}
                 >
-                  <Box
-                    sx={{ position: "relative", mr: 2, flexShrink: 0, top: 5 }}
-                  >
-                    <FaCar
-                      size="1.3rem"
-                      color="#2d2a26"
-                      style={{ width: "30px" }}
-                    />
+                  <Box sx={{ position: "relative", mr: 2, flexShrink: 0, top: 5 }}>
+                    <FaCar size="1.3rem" color="#2d2a26" style={{ width: 30 }}/>
                     <CheckCircleIcon
                       sx={{
                         position: "absolute",
@@ -219,41 +146,22 @@ export default function ProductCard({ product }: Props) {
                       }}
                     />
                   </Box>
-                </Box>
-                <Box>
-                  <Typography
-                    component="span"
-                    color="#157400"
-                    fontSize={14}
-                    sx={{ pr: "5px" }}
-                  >
+                  <Typography component="span" color="#157400" fontSize={14} sx={{ pr: "5px" }}>
                     Fits a
                   </Typography>
-                  <Typography
-                    component="span"
-                    fontSize={14}
-                    sx={{ textDecoration: "underline" }}
-                  >
+                  <Typography component="span" fontSize={14} sx={{ textDecoration: "underline" }}>
                     {current.label}
                   </Typography>
-                </Box>
-              </Grid>
-            ) : null}
+                </Grid>
+              )}
 
-            {/* Notes */}
-            <Typography
-              variant="body2"
-              fontSize={12}
-              sx={{ mt: 1, color: "#2d2a26" }}
-            >
-              <span style={{ fontWeight: 600 }}>Notes: </span>
-              {product.notes}
-            </Typography>
-          </Box>
+              <Typography variant="body2" fontSize={12} sx={{ mt: 1, color: "#2d2a26" }}>
+                <strong>Notes:</strong> {product.notes}
+              </Typography>
+            </Box>
 
-          {/* ───── Right: Price + Add to Cart ───── */}
-          <Box
-            sx={{
+            {/* Price & Cart */}
+            <Box sx={{
               px: 2,
               display: "flex",
               flexDirection: "column",
@@ -264,39 +172,25 @@ export default function ProductCard({ product }: Props) {
                 alignItems: "flex-start",
                 mt: 2,
               },
-            }}
-          >
-            {/* Price */}
-            <Typography variant="h6" sx={{ whiteSpace: "nowrap" }}>
-              ${formattedPrice}
-            </Typography>
-
-            {/* Add to Cart button (stops Link navigation) */}
-            <Button
-              onClick={addToCart}
-              variant="contained"
-              size="small"
-              sx={{
-                width: "130px",
-                py: 1,
-                bgcolor: "#2d2a26",
-                color: "#fff",
-                "&:hover": {
-                  bgcolor: "grey.800",
-                },
+            }}>
+              <Typography variant="h6" sx={{ whiteSpace: "nowrap" }}>
+                ${formattedPrice}
+              </Typography>
+              <Button onClick={addToCart} variant="contained" size="small" sx={{
+                width: 130, py: 1, bgcolor: "#2d2a26", color: "#fff",
+                "&:hover": { bgcolor: "grey.800" },
                 "@media (max-width: 986px)": {
                   width: "100%",
                   mt: 2,
                 },
-              }}
-            >
-              Add to Cart
-            </Button>
-          </Box>
-        </Grid>
-      </Card>
+              }}>
+                Add to Cart
+              </Button>
+            </Box>
+          </Grid>
+        </Card>
+      </Link>
 
-      {/* Vehicle Selector Modal */}
       <VehicleSelectorModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );

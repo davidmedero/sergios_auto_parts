@@ -783,14 +783,37 @@ export default function ProductImages({ urls }: Props) {
     }
   };
 
+  // somewhere at the top of your component
+const activePointers = useRef<Set<number>>(new Set());
+
+useEffect(() => {
+  const onDownCap = (e: PointerEvent) => {
+    activePointers.current.add(e.pointerId);
+  };
+  const onUpCap   = (e: PointerEvent) => {
+    activePointers.current.delete(e.pointerId);
+  };
+
+  window.addEventListener('pointerdown',  onDownCap, { capture: true });
+  window.addEventListener('pointerup',    onUpCap,   { capture: true });
+  window.addEventListener('pointercancel',onUpCap,   { capture: true });
+
+  return () => {
+    window.removeEventListener('pointerdown',  onDownCap, { capture: true });
+    window.removeEventListener('pointerup',    onUpCap,   { capture: true });
+    window.removeEventListener('pointercancel',onUpCap,   { capture: true });
+  };
+}, []);
+
+
   function handlePanPointerUp(e: React.PointerEvent<HTMLImageElement>) {
     console.log('pointer up from ProductImages')
-    if (!isZoomed || isTouchPinching.current === true) {
+    if (!isZoomed || isTouchPinching.current === true || activePointers.current.size === 2) {
       console.log('either not zoomed or isTouchPinching')
       return;
     }
     isPointerDown.current = false;
-    if (isZoomClick.current && isZoomed && !isTouchPinching.current) {
+    if (isZoomClick.current && isZoomed) {
       const targetImg = (e.target as HTMLElement).closest("img") as HTMLImageElement | null;
       if (!targetImg) return;
 

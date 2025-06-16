@@ -457,7 +457,6 @@ export default function ProductImages({ urls }: Props) {
 
     requestAnimationFrame(() => {
       if (newZoom === 2) {
-        console.log('zooming in from toggle')
         if (!imageRef.current) return;
         zoomX.current = boundedX;
         zoomY.current = boundedY;
@@ -499,7 +498,6 @@ export default function ProductImages({ urls }: Props) {
           
         }
       } else {
-        console.log('zooming out from toggle')
         if (!imageRef.current) return;
         zoomX.current = 0;
         zoomY.current = 0;
@@ -796,7 +794,7 @@ export default function ProductImages({ urls }: Props) {
       if (imgIndex === undefined) return;
 
       const matchedRef = imageRefs.current[parseInt(imgIndex)];
-      console.log('zooming out')
+  
       handleZoomToggle(e, matchedRef);
       setIsZoomed(false);
       return;
@@ -1069,9 +1067,21 @@ export default function ProductImages({ urls }: Props) {
   }, [scale]);
 
   useLayoutEffect(() => {
-    setIsZoomed(true);
-    setZoomLevel(2);
+    if (scale > 1.01) {
+      setIsZoomed(true);
+      setZoomLevel(2);
+    } else {
+      setIsZoomed(false);
+      setZoomLevel(1);
+      isPinching.current = false;
+      isTouchPinching.current = false;
+    }
   }, [scale]);
+
+  //   useLayoutEffect(() => {
+  //     setIsZoomed(true);
+  //     setZoomLevel(2);
+  // }, [scale]);
 
   function zoomTo({
     destZoomLevel,
@@ -1273,6 +1283,10 @@ export default function ProductImages({ urls }: Props) {
 
   const endPinch = () => {
     if (!isTouchPinching.current) return;
+    if (scale <= 1.01) {
+      setIsZoomed(false);
+      setZoomLevel(1);
+    }
     console.log('ending pinch')
     isTouchPinching.current = false;
   }

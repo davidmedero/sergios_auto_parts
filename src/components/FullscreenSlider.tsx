@@ -514,7 +514,7 @@ const FullscreenSlider = ({
     console.log('clicked next')
     isScrolling.current = false;
     isPinching.current = false;
-    isTouchPinching.current = false;
+    // isTouchPinching.current = false;
     select(selectedIndex.current + 1);
   }  
 

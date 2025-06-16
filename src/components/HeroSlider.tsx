@@ -189,11 +189,9 @@ const HeroSlider = ({
   }, [slides.current]);
   
   useEffect(() => {
-    const imagesPerSlide = calculateVisibleImages();
-
     slides.current = [];
   
-    for (let i = imagesPerSlide; i < clonedChildren.length - imagesPerSlide; i++) {
+    for (let i = visibleImages; i < clonedChildren.length - visibleImages; i++) {
       slides.current.push({
         cells: [cells.current[i]],
       });

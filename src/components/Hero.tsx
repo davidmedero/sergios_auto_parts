@@ -56,6 +56,13 @@ export default function Hero() {
               '&:active': {
                 cursor: 'grabbing'
               },
+              "@media (max-width: 1024px)": {
+                minHeight: '40dvw',
+                objectFit: 'cover'
+              },
+              "@media (max-width: 768px)": {
+                minHeight: '50dvw',
+              },
             }}
             draggable="false"
             loading="lazy"

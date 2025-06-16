@@ -457,6 +457,7 @@ export default function ProductImages({ urls }: Props) {
 
     requestAnimationFrame(() => {
       if (newZoom === 2) {
+        console.log('zooming in from toggle')
         if (!imageRef.current) return;
         zoomX.current = boundedX;
         zoomY.current = boundedY;
@@ -498,6 +499,7 @@ export default function ProductImages({ urls }: Props) {
           
         }
       } else {
+        console.log('zooming out from toggle')
         if (!imageRef.current) return;
         zoomX.current = 0;
         zoomY.current = 0;
@@ -573,6 +575,7 @@ export default function ProductImages({ urls }: Props) {
     imageRef: React.RefObject<HTMLImageElement | null>) {
     isScrolling.current = false;
     isPinching.current = false;
+    isTouchPinching.current = false;
     isZoomClick.current = true;
 
     if (!isZoomed) return;
@@ -793,7 +796,7 @@ export default function ProductImages({ urls }: Props) {
       if (imgIndex === undefined) return;
 
       const matchedRef = imageRefs.current[parseInt(imgIndex)];
-  
+      console.log('zooming out')
       handleZoomToggle(e, matchedRef);
       setIsZoomed(false);
       return;
@@ -1026,7 +1029,7 @@ export default function ProductImages({ urls }: Props) {
       window.removeEventListener('wheel', handleWheel);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slideIndex, isScrolling.current, handleWheel]);
+  }, [slideIndex, handleWheel]);
 
   type Point = { x: number; y: number };
 
@@ -1076,6 +1079,15 @@ export default function ProductImages({ urls }: Props) {
       isTouchPinching.current = false;
     }
   }, [scale]);
+
+  // useLayoutEffect(() => {
+  //   if (scale <= 1.01) {
+  //     setIsZoomed(false);
+  //     setZoomLevel(1);
+  //     isPinching.current = false;
+  //     isTouchPinching.current = false;
+  //   }
+  // }, [scale]);
 
   function zoomTo({
     destZoomLevel,
@@ -1255,6 +1267,8 @@ export default function ProductImages({ urls }: Props) {
   const onTouchStart = (e: TouchEvent) => {
     if (e.touches.length !== 2) return;
     e.preventDefault();
+    setIsZoomed(true);
+    setZoomLevel(2);
 
     isTouchPinching.current = true;
     const [t0, t1] = [e.touches[0], e.touches[1]];
@@ -1271,12 +1285,13 @@ export default function ProductImages({ urls }: Props) {
     const factor = currDist / startDist.current;
     const destZoom = startScale.current * factor;
 
-    const center = midpoint(t0, t1)
+    const center = midpoint(t0, t1);
     zoomTo({ destZoomLevel: destZoom, centerPoint: center, imageRef })
   }
 
   const endPinch = () => {
     if (!isTouchPinching.current) return;
+    console.log('ending pinch')
     isTouchPinching.current = false;
   }
 
@@ -1322,7 +1337,7 @@ export default function ProductImages({ urls }: Props) {
       window.removeEventListener('touchcancel', endPinch);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zoomTo, onTouchStart, onTouchMove, endPinch, isTouchPinching.current]);
+  }, [zoomTo, onTouchStart, onTouchMove, endPinch]);
 
   const highlightThumbs = useCallback((index: number) => {
     thumbnailRefs.current.forEach((img: HTMLImageElement | null, i: number) => {
@@ -1510,6 +1525,7 @@ export default function ProductImages({ urls }: Props) {
           isTouchPinching={isTouchPinching}
           showFullscreenSlider={showFullscreenSlider}
           isWrapping={isWrapping}
+          setZoomLevel={setZoomLevel}
         >
           {urls.length > 1 ? wrappedFullscreenImages : oneFullscreenImage}
         </FullscreenSlider>

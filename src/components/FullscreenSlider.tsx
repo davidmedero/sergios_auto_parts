@@ -22,6 +22,7 @@ interface FullscreenSliderProps {
   isTouchPinching: React.RefObject<boolean>;
   showFullscreenSlider: boolean;
   isWrapping: RefObject<boolean>;
+  setZoomLevel: (zoomLevel: number) => void;
 }
 
 const FullscreenSlider = ({
@@ -40,7 +41,7 @@ const FullscreenSlider = ({
   scale,
   isTouchPinching,
   showFullscreenSlider,
-  isWrapping
+  isWrapping,
 }: FullscreenSliderProps) => {
   const friction = 0.28;
   const attraction = 0.025;
@@ -174,6 +175,7 @@ const FullscreenSlider = ({
     isScrolling.current = false;
     isPointerDown.current = true;
     isClick.current = true;
+    console.log('triggered')
 
     const transformValues = getCurrentTransform(slider.current);
     const translateX = transformValues.x;
@@ -205,12 +207,15 @@ const FullscreenSlider = ({
   };
 
   function animate() {
+    console.log('isTouchPinching.current', isTouchPinching.current)
     if (isScrolling.current === true || (isClick.current && clickedImgMargin.current) || isTouchPinching.current === true || isClosing.current || isPinching.current === true) {
+      console.log('stopping animation')
       isAnimating.current = false;
       restingFrames.current = 0;
       isClosing.current = false;
       return;
     };
+    console.log('animating FS slider')
     applyDragForce();
     applySelectedAttraction();
 
@@ -360,6 +365,8 @@ const FullscreenSlider = ({
     if (!isPointerDown.current) return;
     isPointerDown.current = false;
 
+    console.log('end')
+
     if (isVerticalScroll.current) {
       const deltaY = Math.abs(previousDragY.current);
       const speedThreshold = 0.1;
@@ -377,7 +384,7 @@ const FullscreenSlider = ({
     let index = dragEndRestingSelect();
 
     if (isClick.current) {
-      console.log('clicked');
+      console.log('clicked 1111');
 
       const closeButton = document.querySelector(".close-button") as HTMLElement | null;
       const clickedImg = (e.target as HTMLElement).closest("img");
@@ -500,12 +507,15 @@ const FullscreenSlider = ({
   function previous() {
     isScrolling.current = false;
     isPinching.current = false;
+    isTouchPinching.current = false;
     select(selectedIndex.current - 1);
   }
   
   function next() {
+    console.log('clicked next')
     isScrolling.current = false;
     isPinching.current = false;
+    isTouchPinching.current = false;
     select(selectedIndex.current + 1);
   }  
 
@@ -515,6 +525,7 @@ const FullscreenSlider = ({
     }
     const length = slides.current.length;
     index = ((index % length) + length) % length;
+    console.log('index select fullscreen', index)
     selectedIndex.current = index;
     slideStore.setSlideIndex(index);
     firstCellInSlide.current = slides.current[index].cells[0]?.element;
@@ -525,7 +536,6 @@ const FullscreenSlider = ({
     if (counter) {
       counter.textContent = `${actualIndex} / ${imageCount}`;
     }
-    isPinching.current = false;
     startAnimation();
   };
 
@@ -550,7 +560,7 @@ const FullscreenSlider = ({
   }, [windowSize]);
 
   useEffect(() => {
-    if (!slider.current || !firstCellInSlide.current || !isPinching.current) return;
+    if (!slider.current || !firstCellInSlide.current || !isPinching.current || !isTouchPinching.current) return;
     lastTranslateX.current = getTranslateX(firstCellInSlide.current);;
     if (selectedIndex.current === 0) {
       x.current = 0;
@@ -561,7 +571,7 @@ const FullscreenSlider = ({
       const currentPosition = x.current;
       setTranslateX(currentPosition, 0);
     }
-  }, [isPinching.current, scale]);
+  }, [scale]);
 
   function wrapSelect(index: number) {
     if (!slider.current) return;
@@ -638,6 +648,7 @@ const FullscreenSlider = ({
     if (imageCount === 1) return;
     isScrolling.current = true;
     isPinching.current = false;
+    isTouchPinching.current = false;
 
     let translateX = getCurrentXFromTransform(slider.current);
     translateX -= e.deltaX;

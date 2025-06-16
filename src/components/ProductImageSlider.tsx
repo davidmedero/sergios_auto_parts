@@ -580,7 +580,7 @@ const ProductImageSlider = ({
     let index = dragEndRestingSelect();
 
     if (isClick.current) {
-      console.log('clicked');
+      console.log('clicked on normal image slider');
       isClosing.current = true;
       const targetImg = (e.target as HTMLElement).closest("img") as HTMLImageElement | null;
       if (!targetImg) return;

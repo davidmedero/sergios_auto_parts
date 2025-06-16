@@ -790,17 +790,17 @@ export default function ProductImages({ urls }: Props) {
       return;
     }
     isPointerDown.current = false;
-    if (isZoomClick.current && isZoomed) {
+    if (isZoomClick.current && isZoomed && !isTouchPinching.current) {
       const targetImg = (e.target as HTMLElement).closest("img") as HTMLImageElement | null;
       if (!targetImg) return;
 
       const imgIndex = targetImg.dataset.index;
       if (imgIndex === undefined) return;
 
-      // const matchedRef = imageRefs.current[parseInt(imgIndex)];
+      const matchedRef = imageRefs.current[parseInt(imgIndex)];
       console.log('zooming out')
-      // handleZoomToggle(e, matchedRef);
-      // setIsZoomed(false);
+      handleZoomToggle(e, matchedRef);
+      setIsZoomed(false);
       return;
     }
 

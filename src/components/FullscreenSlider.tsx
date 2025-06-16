@@ -536,6 +536,20 @@ const FullscreenSlider = ({
   }
 
   useEffect(() => {
+    if (!slider.current || !firstCellInSlide.current) return;
+    lastTranslateX.current = getTranslateX(firstCellInSlide.current);
+    if (selectedIndex.current === 0) {
+      x.current = 0;
+      const currentPosition = x.current;
+      setTranslateX(currentPosition, 0);
+    } else {
+      x.current = -(slider.current.clientWidth * selectedIndex.current);
+      const currentPosition = x.current;
+      setTranslateX(currentPosition, 0);
+    }
+  }, [windowSize]);
+
+  useEffect(() => {
     if (!slider.current || !firstCellInSlide.current || !isPinching.current) return;
     lastTranslateX.current = getTranslateX(firstCellInSlide.current);
     if (selectedIndex.current === 0) {
@@ -547,7 +561,7 @@ const FullscreenSlider = ({
       const currentPosition = x.current;
       setTranslateX(currentPosition, 0);
     }
-  }, [windowSize, scale]);
+  }, [scale]);
 
   useEffect(() => {
     if (!slider.current || !firstCellInSlide.current) return;

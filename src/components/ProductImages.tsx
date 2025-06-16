@@ -574,6 +574,7 @@ export default function ProductImages({ urls }: Props) {
     isScrolling.current = false;
     isPinching.current = false;
     isTouchPinching.current = false;
+    pinchJustEnded.current = false;
     isZoomClick.current = true;
 
     if (!isZoomed) return;
@@ -783,32 +784,17 @@ export default function ProductImages({ urls }: Props) {
     }
   };
 
-  // somewhere at the top of your component
-const activePointers = useRef<Set<number>>(new Set());
-
-useEffect(() => {
-  const onDownCap = (e: PointerEvent) => {
-    activePointers.current.add(e.pointerId);
-  };
-  const onUpCap   = (e: PointerEvent) => {
-    activePointers.current.delete(e.pointerId);
-  };
-
-  window.addEventListener('pointerdown',  onDownCap, { capture: true });
-  window.addEventListener('pointerup',    onUpCap,   { capture: true });
-  window.addEventListener('pointercancel',onUpCap,   { capture: true });
-
-  return () => {
-    window.removeEventListener('pointerdown',  onDownCap, { capture: true });
-    window.removeEventListener('pointerup',    onUpCap,   { capture: true });
-    window.removeEventListener('pointercancel',onUpCap,   { capture: true });
-  };
-}, []);
-
+  const pinchJustEnded = useRef(false);
 
   function handlePanPointerUp(e: React.PointerEvent<HTMLImageElement>) {
     console.log('pointer up from ProductImages')
-    if (!isZoomed || isTouchPinching.current === true || activePointers.current.size === 2) {
+    if (pinchJustEnded.current) {
+      console.log('pinch Just Ended')
+      // swallow this pointerup—it was right after a pinch
+      pinchJustEnded.current = false;
+      return;
+    }
+    if (!isZoomed || isTouchPinching.current === true) {
       console.log('either not zoomed or isTouchPinching')
       return;
     }
@@ -1313,6 +1299,7 @@ useEffect(() => {
     if (!isTouchPinching.current) return;
     console.log('ending pinch')
     isTouchPinching.current = false;
+    pinchJustEnded.current  = true;
   }
 
   useLayoutEffect(() => {

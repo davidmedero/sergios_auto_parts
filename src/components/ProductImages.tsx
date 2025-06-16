@@ -787,15 +787,12 @@ export default function ProductImages({ urls }: Props) {
   const pinchJustEnded = useRef(false);
 
   function handlePanPointerUp(e: React.PointerEvent<HTMLImageElement>) {
-    console.log('pointer up from ProductImages')
     if (pinchJustEnded.current) {
-      console.log('pinch Just Ended')
       // swallow this pointerup—it was right after a pinch
       pinchJustEnded.current = false;
       return;
     }
     if (!isZoomed || isTouchPinching.current === true) {
-      console.log('either not zoomed or isTouchPinching')
       return;
     }
     isPointerDown.current = false;

@@ -123,7 +123,6 @@ const FullscreenSliderModal: React.FC<FullscreenSliderModalProps> = ({
       }
 
       if (currentIndex !== Number(counter?.textContent?.split('/')[0]) ) {
-        console.log('66666')
         if (currentIndex === 0 && (Math.abs(currentTranslateX) >= slider.scrollWidth - slider.getBoundingClientRect().width * 1.5 && Math.abs(currentTranslateX) <= slider.scrollWidth - slider.getBoundingClientRect().width) && React.isValidElement<{ imageCount: number }>(children)) {
           const { imageCount } = children.props
           targetImg = document.querySelector(`.fullscreen_slider img[data-index="${imageCount + 1}"]`) as HTMLImageElement | null;

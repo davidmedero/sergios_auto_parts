@@ -207,15 +207,12 @@ const FullscreenSlider = ({
   };
 
   function animate() {
-    console.log('isTouchPinching.current', isTouchPinching.current)
     if (isScrolling.current === true || (isClick.current && clickedImgMargin.current) || isTouchPinching.current === true || isClosing.current || isPinching.current === true) {
-      console.log('stopping animation')
       isAnimating.current = false;
       restingFrames.current = 0;
       isClosing.current = false;
       return;
     };
-    console.log('animating FS slider')
     applyDragForce();
     applySelectedAttraction();
 
@@ -365,8 +362,6 @@ const FullscreenSlider = ({
     if (!isPointerDown.current) return;
     isPointerDown.current = false;
 
-    console.log('end')
-
     if (isVerticalScroll.current) {
       const deltaY = Math.abs(previousDragY.current);
       const speedThreshold = 0.1;
@@ -384,7 +379,6 @@ const FullscreenSlider = ({
     let index = dragEndRestingSelect();
 
     if (isClick.current) {
-      console.log('clicked 1111');
 
       const closeButton = document.querySelector(".close-button") as HTMLElement | null;
       const clickedImg = (e.target as HTMLElement).closest("img");
@@ -507,15 +501,12 @@ const FullscreenSlider = ({
   function previous() {
     isScrolling.current = false;
     isPinching.current = false;
-    isTouchPinching.current = false;
     select(selectedIndex.current - 1);
   }
   
   function next() {
-    console.log('clicked next')
     isScrolling.current = false;
     isPinching.current = false;
-    // isTouchPinching.current = false;
     select(selectedIndex.current + 1);
   }  
 
@@ -525,7 +516,6 @@ const FullscreenSlider = ({
     }
     const length = slides.current.length;
     index = ((index % length) + length) % length;
-    console.log('index select fullscreen', index)
     selectedIndex.current = index;
     slideStore.setSlideIndex(index);
     firstCellInSlide.current = slides.current[index].cells[0]?.element;
@@ -546,7 +536,7 @@ const FullscreenSlider = ({
   }
 
   useEffect(() => {
-    if (!slider.current || !firstCellInSlide.current) return;
+    if (!slider.current || !firstCellInSlide.current || !isPinching.current) return;
     lastTranslateX.current = getTranslateX(firstCellInSlide.current);
     if (selectedIndex.current === 0) {
       x.current = 0;
@@ -557,19 +547,21 @@ const FullscreenSlider = ({
       const currentPosition = x.current;
       setTranslateX(currentPosition, 0);
     }
-  }, [windowSize]);
+  }, [windowSize, scale]);
 
   useEffect(() => {
-    if (!slider.current || !firstCellInSlide.current || !isPinching.current || !isTouchPinching.current) return;
-    lastTranslateX.current = getTranslateX(firstCellInSlide.current);;
-    if (selectedIndex.current === 0) {
-      x.current = 0;
-      const currentPosition = x.current;
-      setTranslateX(currentPosition, 0);
-    } else {
-      x.current = -(slider.current.clientWidth * selectedIndex.current);
-      const currentPosition = x.current;
-      setTranslateX(currentPosition, 0);
+    if (!slider.current || !firstCellInSlide.current) return;
+    if (isTouchPinching.current === true) {
+      lastTranslateX.current = getTranslateX(firstCellInSlide.current);
+      if (selectedIndex.current === 0) {
+        x.current = 0;
+        const currentPosition = x.current;
+        setTranslateX(currentPosition, 0);
+      } else {
+        x.current = -(slider.current.clientWidth * selectedIndex.current);
+        const currentPosition = x.current;
+        setTranslateX(currentPosition, 0);
+      }
     }
   }, [scale]);
 

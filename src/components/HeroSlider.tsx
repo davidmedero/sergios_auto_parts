@@ -688,7 +688,7 @@ const HeroSlider = ({
   
 
   return (
-    <Box sx={{ position: 'relative', height: `${sliderHeight}px` }}>
+    <Box sx={{ position: 'relative', height: `${sliderHeight}px`, overflow: "hidden" }}>
     {/* Previous Button */}
     <IconButton
       onClick={() => previous()}

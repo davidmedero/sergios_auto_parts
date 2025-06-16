@@ -36,7 +36,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <Box sx={{ boxShadow: '0 3px 6px rgba(0, 0, 0, 0.3)', position: 'relative' }}>
+    <Box sx={{ boxShadow: '0 3px 6px rgba(0, 0, 0, 0.3)', position: 'relative', overflow: "hidden" }}>
       <HeroSlider windowSize={windowSize}>
         {slides.map((src, index) => (
           <Box

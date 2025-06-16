@@ -797,10 +797,10 @@ export default function ProductImages({ urls }: Props) {
       const imgIndex = targetImg.dataset.index;
       if (imgIndex === undefined) return;
 
-      const matchedRef = imageRefs.current[parseInt(imgIndex)];
+      // const matchedRef = imageRefs.current[parseInt(imgIndex)];
       console.log('zooming out')
-      handleZoomToggle(e, matchedRef);
-      setIsZoomed(false);
+      // handleZoomToggle(e, matchedRef);
+      // setIsZoomed(false);
       return;
     }
 

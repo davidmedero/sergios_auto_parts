@@ -692,7 +692,7 @@ const FullscreenSlider = ({
     // ——— 2) Intercept any 2nd finger down on the slider ———
     const interceptSecondFinger = (e: PointerEvent) => {
       if (activePointers.size > 1) {
-            console.log('more than one pointer', activePointers.size)
+        console.log('more than one pointer', activePointers.size)
         // swallow it so handlePointerStart never runs
         e.stopImmediatePropagation();
         isPointerDown.current = false;
@@ -730,7 +730,6 @@ const FullscreenSlider = ({
     handleWheel,
     slider.current,
   ]);
-
 
   useEffect(() => {
     const leftChevron = document.querySelector(".left-chevron");

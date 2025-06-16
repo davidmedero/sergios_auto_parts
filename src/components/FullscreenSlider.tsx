@@ -22,7 +22,6 @@ interface FullscreenSliderProps {
   isTouchPinching: React.RefObject<boolean>;
   showFullscreenSlider: boolean;
   isWrapping: RefObject<boolean>;
-  setZoomLevel: (zoomLevel: number) => void;
 }
 
 const FullscreenSlider = ({
@@ -41,7 +40,7 @@ const FullscreenSlider = ({
   scale,
   isTouchPinching,
   showFullscreenSlider,
-  isWrapping,
+  isWrapping
 }: FullscreenSliderProps) => {
   const friction = 0.28;
   const attraction = 0.025;

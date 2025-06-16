@@ -1069,25 +1069,9 @@ export default function ProductImages({ urls }: Props) {
   }, [scale]);
 
   useLayoutEffect(() => {
-    if (scale > 1.01) {
-      setIsZoomed(true);
-      setZoomLevel(2);
-    } else {
-      setIsZoomed(false);
-      setZoomLevel(1);
-      isPinching.current = false;
-      isTouchPinching.current = false;
-    }
+    setIsZoomed(true);
+    setZoomLevel(2);
   }, [scale]);
-
-  // useLayoutEffect(() => {
-  //   if (scale <= 1.01) {
-  //     setIsZoomed(false);
-  //     setZoomLevel(1);
-  //     isPinching.current = false;
-  //     isTouchPinching.current = false;
-  //   }
-  // }, [scale]);
 
   function zoomTo({
     destZoomLevel,
@@ -1267,8 +1251,6 @@ export default function ProductImages({ urls }: Props) {
   const onTouchStart = (e: TouchEvent) => {
     if (e.touches.length !== 2) return;
     e.preventDefault();
-    setIsZoomed(true);
-    setZoomLevel(2);
 
     isTouchPinching.current = true;
     const [t0, t1] = [e.touches[0], e.touches[1]];
@@ -1525,7 +1507,6 @@ export default function ProductImages({ urls }: Props) {
           isTouchPinching={isTouchPinching}
           showFullscreenSlider={showFullscreenSlider}
           isWrapping={isWrapping}
-          setZoomLevel={setZoomLevel}
         >
           {urls.length > 1 ? wrappedFullscreenImages : oneFullscreenImage}
         </FullscreenSlider>

@@ -784,7 +784,11 @@ export default function ProductImages({ urls }: Props) {
   };
 
   function handlePanPointerUp(e: React.PointerEvent<HTMLImageElement>) {
-    if (!isZoomed) return;
+    console.log('pointer up from ProductImages')
+    if (!isZoomed || isTouchPinching.current === true) {
+      console.log('either not zoomed or isTouchPinching')
+      return;
+    }
     isPointerDown.current = false;
     if (isZoomClick.current && isZoomed) {
       const targetImg = (e.target as HTMLElement).closest("img") as HTMLImageElement | null;
@@ -794,7 +798,7 @@ export default function ProductImages({ urls }: Props) {
       if (imgIndex === undefined) return;
 
       const matchedRef = imageRefs.current[parseInt(imgIndex)];
-  
+      console.log('zooming out')
       handleZoomToggle(e, matchedRef);
       setIsZoomed(false);
       return;
@@ -1263,6 +1267,7 @@ export default function ProductImages({ urls }: Props) {
     e.preventDefault();
 
     isTouchPinching.current = true;
+    console.log('touching with 2 fingers')
     const [t0, t1] = [e.touches[0], e.touches[1]];
     startDist.current = distance(t0, t1);
     startScale.current = scale;
@@ -1283,10 +1288,6 @@ export default function ProductImages({ urls }: Props) {
 
   const endPinch = () => {
     if (!isTouchPinching.current) return;
-    if (scale <= 1.01) {
-      setIsZoomed(false);
-      setZoomLevel(1);
-    }
     console.log('ending pinch')
     isTouchPinching.current = false;
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useRef, useEffect, ReactNode, Children, RefObject } from "react";
@@ -673,24 +674,63 @@ const FullscreenSlider = ({
   };
 
   useEffect(() => {
-    const sliderRef = slider.current;
-  
-    if (sliderRef) {
-      const pointerUpHandler = (e: PointerEvent) => handlePointerEnd(e as unknown as React.PointerEvent<HTMLImageElement>);
+    const sliderEl = slider.current;
+    if (!sliderEl) return;
 
-      sliderRef.addEventListener("pointerdown", handlePointerStart);
-      window.addEventListener("pointermove", handlePointerMove);
-      window.addEventListener('pointerup', pointerUpHandler);
-      window.addEventListener("wheel", handleWheel, { passive: false });
-
-      return () => {
-        sliderRef.removeEventListener("pointerdown", handlePointerStart);
-        window.removeEventListener("pointermove", handlePointerMove);
-        window.removeEventListener("pointerup", pointerUpHandler);
-        window.removeEventListener("wheel", handleWheel);
-      };
+    // ——— 1) Track active pointers in capture ———
+    const activePointers = new Set<number>();
+    const onDownCap = (e: PointerEvent) => {
+      activePointers.add(e.pointerId);
     };
-  }, [handlePointerStart, handlePointerMove, handlePointerEnd, handleWheel, slider.current, isScrolling.current]);
+    const onUpCap = (e: PointerEvent) => {
+      activePointers.delete(e.pointerId);
+    };
+    window.addEventListener('pointerdown',  onDownCap,   { capture: true });
+    window.addEventListener('pointerup',    onUpCap,     { capture: true });
+    window.addEventListener('pointercancel', onUpCap,     { capture: true });
+
+    // ——— 2) Intercept any 2nd finger down on the slider ———
+    const interceptSecondFinger = (e: PointerEvent) => {
+      if (activePointers.size > 1) {
+            console.log('more than one pointer', activePointers.size)
+        // swallow it so handlePointerStart never runs
+        e.stopImmediatePropagation();
+        isPointerDown.current = false;
+        isAnimating.current = false;
+        restingFrames.current = 0;
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    sliderEl.addEventListener('pointerdown', interceptSecondFinger, { capture: true });
+
+    // ——— 3) Wire up your existing bubble‐phase handlers ———
+    sliderEl.addEventListener('pointerdown', handlePointerStart);
+    window.addEventListener('pointermove',   handlePointerMove);
+    window.addEventListener('pointerup',     (e) => handlePointerEnd(e as any));
+    window.addEventListener('wheel',         handleWheel, { passive: false });
+
+    return () => {
+      // clean up everything
+      window.removeEventListener('pointerdown',  onDownCap,   { capture: true });
+      window.removeEventListener('pointerup',    onUpCap,     { capture: true });
+      window.removeEventListener('pointercancel', onUpCap,     { capture: true });
+
+      sliderEl.removeEventListener('pointerdown', interceptSecondFinger, { capture: true });
+
+      sliderEl.removeEventListener('pointerdown', handlePointerStart);
+      window.removeEventListener('pointermove',   handlePointerMove);
+      window.removeEventListener('pointerup',     (e) => handlePointerEnd(e as any));
+      window.removeEventListener('wheel',         handleWheel);
+    };
+  }, [
+    handlePointerStart,
+    handlePointerMove,
+    handlePointerEnd,
+    handleWheel,
+    slider.current,
+  ]);
+
 
   useEffect(() => {
     const leftChevron = document.querySelector(".left-chevron");

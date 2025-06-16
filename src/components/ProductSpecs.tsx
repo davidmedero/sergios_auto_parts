@@ -160,6 +160,12 @@ export default function ProductSpecs({
             dangerouslySetInnerHTML={{ __html: descriptionHtml }} 
             sx={{
               color: "#2d2a26",
+              "& .az_Ea": {
+                listStyle: "none",
+              },
+              "& ul": {
+                padding: 0,
+              },
               "& ul.az__hc": {
                 listStyle: "none",
                 mt: 2,
@@ -182,6 +188,12 @@ export default function ProductSpecs({
               "& li.az_ca > div": {
                 flex: 1,
               },
+              "& li.az_Ea": {
+                display: "flex",
+                alignItems: "flex-start",
+                flexDirection: "row",
+                gap: 2
+              }
             }}
           >
           </Typography>

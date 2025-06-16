@@ -70,6 +70,13 @@ export default function HomeClient({ categories }: Props) {
                       height="140"
                       image={cat.imageUrl}
                       alt={cat.imageAlt ?? cat.name}
+                      sx={{  
+                        objectFit: "contain",
+                        transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        "&:hover": {
+                          transform: "scale(1.2)"
+                        }
+                      }}
                     />
                   )}
                   <CardContent>
